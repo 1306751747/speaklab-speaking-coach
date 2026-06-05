@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SpeakLab 英语口语练习</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <aside class="sidebar" aria-label="训练设置">
+        <div class="brand">
+          <div class="mark" aria-hidden="true">SL</div>
+          <div>
+            <h1>SpeakLab</h1>
+            <p>场景化英语口语训练</p>
+          </div>
+        </div>
+
+        <section class="panel">
+          <h2>场景</h2>
+          <div id="scenarioList" class="scenario-list"></div>
+        </section>
+
+        <section class="panel compact">
+          <h2>训练目标</h2>
+          <label>
+            <span>难度</span>
+            <select id="levelSelect">
+              <option value="basic">基础表达</option>
+              <option value="workplace" selected>职场自然表达</option>
+              <option value="advanced">进阶精准表达</option>
+            </select>
+          </label>
+          <label>
+            <span>语速</span>
+            <input id="speedRange" type="range" min="0.75" max="1.15" step="0.05" value="0.95" />
+          </label>
+        </section>
+      </aside>
+
+      <section class="coach">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Live session</p>
+            <h2 id="sessionTitle">Interview Warm-up</h2>
+          </div>
+          <div class="status-strip">
+            <span id="speechStatus">语音引擎待机</span>
+            <span id="roundCounter">0 / 6 rounds</span>
+          </div>
+        </header>
+
+        <section class="conversation" aria-label="对话记录">
+          <div id="messageLog" class="message-log"></div>
+        </section>
+
+        <section class="speech-console">
+          <div class="transcript-box">
+            <label for="draftInput">你的回答</label>
+            <textarea id="draftInput" rows="3" placeholder="点击麦克风开始说话，或直接输入后发送。"></textarea>
+          </div>
+          <div class="actions">
+            <button id="micButton" class="icon-button primary" type="button" aria-label="开始语音输入" title="开始语音输入">🎙</button>
+            <button id="sendButton" type="button">发送回答</button>
+            <button id="resetButton" class="ghost" type="button">重新开始</button>
+          </div>
+        </section>
+      </section>
+
+      <aside class="insights" aria-label="反馈面板">
+        <section class="panel score-panel">
+          <div class="score-ring">
+            <span id="overallScore">--</span>
+            <small>综合</small>
+          </div>
+          <div class="score-grid">
+            <div><strong id="pronScore">--</strong><span>发音清晰</span></div>
+            <div><strong id="fluencyScore">--</strong><span>流利度</span></div>
+            <div><strong id="grammarScore">--</strong><span>语法表达</span></div>
+            <div><strong id="relevanceScore">--</strong><span>场景贴合</span></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>即时纠错</h2>
+          <div id="correctionList" class="correction-list empty">完成一轮回答后显示建议。</div>
+        </section>
+
+        <section class="panel">
+          <h2>课后总结</h2>
+          <div id="summaryBox" class="summary-box empty">至少完成 3 轮后生成可量化总结。</div>
+          <button id="summaryButton" class="wide" type="button">生成总结</button>
+        </section>
+      </aside>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
