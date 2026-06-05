@@ -1,13 +1,14 @@
 # SpeakLab AI English Speaking Coach
 
-SpeakLab is an AI English speaking practice platform with a cinematic "Living Language Space" landing experience. The entry scene uses clay-inspired materials, spatial floating English words, liquid-glass interaction, particle dissolution, bloom, depth of field, and film grain before transitioning into the speaking coach.
+SpeakLab is an AI English speaking practice platform with a warm cartoon clay "Living Language Space" landing experience. The entry scene uses a cozy clay-yellow world, tiny flowers and grass across the screen, floating English words, an iOS-style glass cursor field, soft word dissolution, and a gentle transition into the speaking coach.
 
 ## Features
 
-- Cinematic interactive landing page inspired by Apple Vision Pro and Liquid Glass.
-- Hundreds of English words floating through depth space like thoughts and vocabulary.
-- Frosted glass cursor field with word awareness, vibration, particle breakup, inward swirl, and light dissolve.
-- Center portal card that collapses the language space into the speaking application.
+- Warm cartoon-clay interactive landing page with a cozy handmade texture.
+- Tiny flowers, grass sprouts, leaves, and plant details distributed across the full screen.
+- White English words floating slowly across the full page with soft appear, drift, and fade cycles.
+- Cursor-aligned frosted glass circle that uses the exact pointer coordinates and dissolves only nearby words.
+- Center glassmorphism card labeled `Start Communicating` with a soft magical transition into the speaking app.
 - English speaking coach with scenario selection, microphone input, speech synthesis, scoring, expression corrections, and live feedback.
 - Legacy static prototype remains available in `legacy-static/` for fallback demos.
 
@@ -40,13 +41,8 @@ Then open `http://localhost:8080`.
 
 - Next.js
 - React
-- React Three Fiber
-- Three.js
-- Drei
 - Framer Motion
-- GLSL shader materials
-- GPU-style point particles
-- Post-processing bloom, depth of field, vignette, and film grain
+- CSS clay texture, plant shapes, floating word animations, and glassmorphism effects
 - Browser Web Speech API for speech recognition and synthesis
 
 ## Original Work and Dependencies
@@ -77,4 +73,4 @@ Add the public demo video link here after uploading it to a playable external pl
 
 - Demo video: pending
 
-Recommended demo flow: open the landing page, show floating words and cursor dissolution, click the portal, select a speaking scenario, answer with microphone or text, view live feedback, and explain the scoring/correction results.
+Recommended demo flow: open the landing page, show the warm clay-yellow world, move the glass circle over floating words to dissolve them, click `Start Communicating`, select a speaking scenario, answer with microphone or text, view live feedback, and explain the scoring/correction results.
