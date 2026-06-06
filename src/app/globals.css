@@ -47,14 +47,22 @@ button {
   inset: 0;
   z-index: 0;
   min-height: 100vh;
+  opacity: 1;
   pointer-events: none;
   visibility: hidden;
+  contain: layout paint style;
+  backface-visibility: hidden;
+  transform: translateZ(0) scale(1.01);
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
 }
 
 .app-transition-layer.active {
   z-index: 1;
+  opacity: 1;
   pointer-events: auto;
   visibility: visible;
+  transform: translateZ(0) scale(1);
 }
 
 .app-transition-layer.settled {
@@ -71,6 +79,18 @@ button {
   overflow: hidden;
   cursor: none;
   background: #d7a84e url("/assets/clay-plasticine-bg.png") center / cover no-repeat;
+  contain: layout paint style;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.warm-landing.collapsing {
+  opacity: 0;
+  transform: translateZ(0) scale(0.992);
 }
 
 .plant-field,
@@ -79,10 +99,22 @@ button {
   inset: 0;
   overflow: hidden;
   pointer-events: none;
+  contain: layout paint style;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 .plant-field {
   z-index: 1;
+  transition:
+    opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.plant-field.fading {
+  opacity: 0.16;
+  transform: translateZ(0) scale(0.96);
 }
 
 .plant {
@@ -262,14 +294,18 @@ button {
   z-index: 2;
   transform-origin: 50% 50%;
   transition:
-    opacity 0.58s ease,
-    transform 0.82s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.42s ease,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
 }
 
 .word-field.collapsing {
   opacity: 0;
-  transform: scale(0.94);
+  transform: translateZ(0) scale(0.97);
+}
+
+.word-field.collapsing .floating-word {
+  animation-play-state: paused;
 }
 
 .floating-word {
@@ -323,6 +359,15 @@ button {
     0 0 34px rgba(255, 248, 230, 0.36);
   backdrop-filter: blur(18px) saturate(142%);
   -webkit-backdrop-filter: blur(18px) saturate(142%);
+  transition:
+    opacity 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.cursor-glass.collapsing {
+  opacity: 0;
+  transform: translateZ(0) scale(0.42);
 }
 
 .communication-card {
@@ -352,6 +397,20 @@ button {
   backdrop-filter: blur(22px) saturate(140%);
   -webkit-backdrop-filter: blur(22px) saturate(140%);
   overflow: visible;
+  transform: translateZ(0) scale(1);
+  transition:
+    opacity 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.communication-card:not(:disabled):hover {
+  transform: translateZ(0) scale(1.045);
+}
+
+.communication-card.collapsing {
+  opacity: 0;
+  transform: translateZ(0) scale(1.08);
 }
 
 .communication-card::before {
@@ -410,12 +469,19 @@ button {
   width: 22px;
   height: 22px;
   border-radius: 50%;
+  opacity: 0;
   translate: -50% -50%;
   pointer-events: none;
   background: #fffaf0;
-  box-shadow:
-    0 0 24px 14px rgba(255, 255, 255, 0.72),
-    0 0 96px 52px rgba(255, 232, 178, 0.46);
+  box-shadow: 0 0 24px 12px rgba(255, 247, 224, 0.48);
+  contain: layout paint style;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: opacity, transform;
+}
+
+.warm-collapse.active {
+  animation: warmCollapsePulse 0.48s ease-in-out forwards;
 }
 
 .app-shell {
@@ -622,6 +688,21 @@ button {
 @keyframes softReflection {
   to {
     transform: rotate(1turn);
+  }
+}
+
+@keyframes warmCollapsePulse {
+  0% {
+    opacity: 0;
+    transform: translateZ(0) scale(0.18);
+  }
+  44% {
+    opacity: 0.58;
+    transform: translateZ(0) scale(0.82);
+  }
+  100% {
+    opacity: 0;
+    transform: translateZ(0) scale(1.45);
   }
 }
 

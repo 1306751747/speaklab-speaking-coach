@@ -129,24 +129,28 @@ const WordItems = memo(function WordItems({ wordItems, dissolving }) {
 function DecorativePlants({ hidden }) {
   const plants = useMemo(() => Array.from({ length: 165 }, (_, index) => createPlant(index)), []);
   return (
-    <motion.div
-      className="plant-field"
+    <div
+      className={`plant-field ${hidden ? "fading" : ""}`}
       aria-hidden="true"
-      animate={{ opacity: hidden ? 0.16 : 1, scale: hidden ? 0.96 : 1 }}
-      transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
     >
       <PlantItems plants={plants} />
-    </motion.div>
+    </div>
   );
 }
 
 function FloatingWords({ cursor, phase }) {
   const radius = 82;
+  const timeoutIds = useRef(new Set());
   const [wordItems, setWordItems] = useState(() => Array.from({ length: 135 }, (_, index) => createWord(index)));
   const [dissolving, setDissolving] = useState(() => new Set());
 
   useEffect(() => {
-    if (phase !== "idle") return undefined;
+    if (phase !== "idle") {
+      timeoutIds.current.forEach((id) => window.clearTimeout(id));
+      timeoutIds.current.clear();
+      setDissolving((current) => (current.size ? new Set() : current));
+      return undefined;
+    }
 
     const checkWords = () => {
       if (!cursor.current.active) return;
@@ -161,7 +165,8 @@ function FloatingWords({ cursor, phase }) {
           if (distance < radius) {
             next.add(item.id);
             changed = true;
-            window.setTimeout(() => {
+            const timeoutId = window.setTimeout(() => {
+              timeoutIds.current.delete(timeoutId);
               setWordItems((items) =>
                 items.map((word) =>
                   word.id === item.id ? createWord(Number(item.id.split("-")[0]), item.cycle + 1) : word
@@ -173,6 +178,7 @@ function FloatingWords({ cursor, phase }) {
                 return copy;
               });
             }, 920);
+            timeoutIds.current.add(timeoutId);
           }
         }
         return changed ? next : current;
@@ -195,6 +201,11 @@ function CursorGlass({ cursor, phase }) {
   const y = useMotionValue(-200);
 
   useEffect(() => {
+    if (phase !== "idle") {
+      cursor.current = { ...cursor.current, active: false };
+      return undefined;
+    }
+
     const handleMove = (event) => {
       cursor.current = { x: event.clientX, y: event.clientY, active: true };
       x.set(event.clientX);
@@ -202,36 +213,23 @@ function CursorGlass({ cursor, phase }) {
     };
     window.addEventListener("pointermove", handleMove);
     return () => window.removeEventListener("pointermove", handleMove);
-  }, [cursor, x, y]);
+  }, [cursor, phase, x, y]);
 
   return (
     <motion.div
-      className="cursor-glass"
+      className={`cursor-glass ${phase !== "idle" ? "collapsing" : ""}`}
       style={{ left: x, top: y }}
-      animate={{
-        opacity: phase === "collapse" ? 0 : 1,
-        scale: phase === "collapse" ? 0.42 : 1
-      }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
     />
   );
 }
 
 function EntryCard({ phase, onEnter }) {
   return (
-    <motion.button
+    <button
       type="button"
-      className="communication-card"
+      className={`communication-card ${phase === "collapse" ? "collapsing" : ""}`}
       disabled={phase !== "idle"}
       onClick={onEnter}
-      initial={{ opacity: 0, y: 22, scale: 0.94 }}
-      animate={{
-        opacity: phase === "collapse" ? 0 : 1,
-        y: phase === "collapse" ? -8 : 0,
-        scale: phase === "collapse" ? 1.12 : 1
-      }}
-      whileHover={phase === "idle" ? { scale: 1.045 } : undefined}
-      transition={{ type: "spring", stiffness: 150, damping: 19 }}
     >
       <span className="card-kicker">SpeakLab</span>
       <strong aria-label="Start Communicating">
@@ -239,7 +237,7 @@ function EntryCard({ phase, onEnter }) {
         <span>Communicating</span>
       </strong>
       <em>soft practice for real English moments</em>
-    </motion.button>
+    </button>
   );
 }
 
@@ -250,29 +248,17 @@ function WarmLanding({ onBegin, onComplete }) {
   const enter = () => {
     setPhase("collapse");
     onBegin?.();
-    window.setTimeout(onComplete, 820);
+    window.setTimeout(onComplete, 500);
   };
 
   return (
-    <motion.section
-      className="warm-landing"
-      exit={{ opacity: 0, scale: 0.985 }}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <section className={`warm-landing ${phase === "collapse" ? "collapsing" : ""}`}>
       <DecorativePlants hidden={phase === "collapse"} />
       <FloatingWords cursor={cursor} phase={phase} />
       <EntryCard phase={phase} onEnter={enter} />
       <CursorGlass cursor={cursor} phase={phase} />
-      <motion.div
-        className="warm-collapse"
-        aria-hidden="true"
-        animate={{
-          opacity: phase === "collapse" ? [0, 0.68, 0] : 0,
-          scale: phase === "collapse" ? [0.15, 0.92, 1.85] : 0.15
-        }}
-        transition={{ duration: 0.78, times: [0, 0.48, 1], ease: "easeInOut" }}
-      />
-    </motion.section>
+      <div className={`warm-collapse ${phase === "collapse" ? "active" : ""}`} aria-hidden="true" />
+    </section>
   );
 }
 
@@ -435,32 +421,37 @@ export default function Page() {
   const [landingVisible, setLandingVisible] = useState(true);
 
   useEffect(() => {
-    const mountApp = () => setAppMounted(true);
+    let mounted = false;
+    const mountApp = () => {
+      if (mounted) return;
+      mounted = true;
+      setAppMounted(true);
+    };
+    const fallbackId = window.setTimeout(mountApp, 240);
+    let idleId;
     if ("requestIdleCallback" in window) {
-      const id = window.requestIdleCallback(mountApp, { timeout: 900 });
-      return () => window.cancelIdleCallback?.(id);
+      idleId = window.requestIdleCallback(mountApp, { timeout: 180 });
     }
-    const id = window.setTimeout(mountApp, 500);
-    return () => window.clearTimeout(id);
+    return () => {
+      window.clearTimeout(fallbackId);
+      if (idleId) window.cancelIdleCallback?.(idleId);
+    };
   }, []);
 
   const prepareApp = () => {
     setAppMounted(true);
-    window.setTimeout(() => setEntered(true), 260);
+    window.setTimeout(() => setEntered(true), 100);
   };
 
   return (
     <div className="page-stage">
       {(appMounted || entered) && (
-        <motion.div
+        <div
           className={`app-transition-layer ${entered ? "active" : ""} ${!landingVisible ? "settled" : ""}`}
           aria-hidden={!entered}
-          initial={{ opacity: 0, scale: 1.01 }}
-          animate={{ opacity: entered ? 1 : 0.001, scale: 1 }}
-          transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
         >
           <SpeakingApp active={entered} />
-        </motion.div>
+        </div>
       )}
       {landingVisible && <WarmLanding onBegin={prepareApp} onComplete={() => setLandingVisible(false)} />}
     </div>
