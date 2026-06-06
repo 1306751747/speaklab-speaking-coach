@@ -32,6 +32,34 @@ const scenarios = [
     title: "会议沟通",
     prompt: "请试着用英语说说你最近的进展和变化。",
     goal: "练习简洁汇报、说明阻碍、提出方案和确认行动项。"
+  },
+  {
+    id: "travel",
+    label: "旅行",
+    title: "旅行沟通",
+    prompt: "请试着用英语说明你的入住需求和今天的旅行安排。",
+    goal: "练习酒店入住、交通询问、行程安排和礼貌确认。"
+  },
+  {
+    id: "campus",
+    label: "校园",
+    title: "校园交流",
+    prompt: "请试着用英语和同学讨论一次课程任务或学习计划。",
+    goal: "练习课堂讨论、学习计划、同学协作和观点表达。"
+  },
+  {
+    id: "support",
+    label: "客服",
+    title: "客服求助",
+    prompt: "请试着用英语描述你遇到的问题，并请求对方帮助解决。",
+    goal: "练习说明问题、补充细节、确认方案和表达感谢。"
+  },
+  {
+    id: "social",
+    label: "社交",
+    title: "社交寒暄",
+    prompt: "请试着用英语做一个轻松自然的自我介绍。",
+    goal: "练习兴趣表达、轻松寒暄、延展话题和自然回应。"
   }
 ];
 
@@ -477,7 +505,11 @@ function analyzeSpeech(text, scenarioId) {
   const keywords = {
     interview: ["project", "role", "impact", "team", "challenge"],
     restaurant: ["order", "recommend", "allergy", "drink", "confirm"],
-    meeting: ["progress", "blocker", "timeline", "action", "owner"]
+    meeting: ["progress", "blocker", "timeline", "action", "owner"],
+    travel: ["hotel", "check", "transport", "trip", "reservation"],
+    campus: ["course", "class", "study", "assignment", "partner"],
+    support: ["problem", "issue", "help", "solution", "confirm"],
+    social: ["name", "hobby", "interest", "meet", "share"]
   }[scenarioId];
   const relevanceHits = keywords.filter((keyword) => lower.includes(keyword)).length;
   const fluency = clamp(86 - fillers * 7 + Math.min(wordsInAnswer.length, 35) * 0.25, 45, 98);
@@ -496,7 +528,11 @@ function nextCoachLine(scenarioId, count) {
   const lines = {
     interview: ["Could you make that more specific?", "What did you learn from that experience?", "How would you summarize your strengths?"],
     restaurant: ["Would you like to confirm the order?", "Do you have any dietary needs?", "Could you ask for a recommendation?"],
-    meeting: ["What is the next action item?", "Who should own that task?", "How should the timeline change?"]
+    meeting: ["What is the next action item?", "Who should own that task?", "How should the timeline change?"],
+    travel: ["Could you ask about the check-in time?", "How would you confirm your reservation?", "Could you ask for directions politely?"],
+    campus: ["Could you explain your study plan?", "How would you ask a classmate for help?", "Could you share one opinion about the course?"],
+    support: ["Could you describe the problem more clearly?", "What solution would you like to request?", "How would you confirm the next step?"],
+    social: ["Could you add one detail about your hobby?", "How would you ask a friendly follow-up question?", "Could you make the introduction warmer?"]
   };
   return lines[scenarioId][count % lines[scenarioId].length];
 }
