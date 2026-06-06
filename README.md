@@ -12,6 +12,10 @@ SpeakLab is an AI English speaking practice platform with a warm cartoon clay "L
 - English speaking coach with scenario selection, microphone input, speech synthesis, scoring, expression corrections, and live feedback.
 - Legacy static prototype remains available in `legacy-static/` for fallback demos.
 
+## Product Analysis and Design Thinking
+
+- [AI 英语口语训练竞品分析报告](docs/competitive-analysis.md)
+
 ## Local Run
 
 Install dependencies and start the Next.js app:
