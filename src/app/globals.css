@@ -97,6 +97,94 @@ button {
   mix-blend-mode: multiply;
 }
 
+.clay-relief {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  filter: saturate(0.98);
+}
+
+.clay-mark {
+  position: absolute;
+  display: block;
+  transform: translate(-50%, -50%) rotate(var(--mark-rotate));
+  pointer-events: none;
+}
+
+.clay-dent {
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 40% 34%, rgba(113, 69, 28, 0.16), transparent 52%),
+    radial-gradient(ellipse at 62% 68%, rgba(255, 235, 167, 0.22), transparent 62%);
+  box-shadow:
+    inset 1px 2px 5px rgba(108, 67, 28, 0.24),
+    inset -2px -2px 5px rgba(255, 226, 158, 0.2),
+    0 1px 2px rgba(255, 232, 164, 0.08);
+  filter: blur(0.2px);
+}
+
+.clay-press {
+  border-radius: 46% 54% 52% 48%;
+  background:
+    linear-gradient(145deg, rgba(108, 66, 26, 0.13), transparent 42%),
+    linear-gradient(315deg, rgba(255, 232, 164, 0.18), transparent 58%);
+  box-shadow:
+    inset 2px 2px 4px rgba(109, 67, 29, 0.18),
+    inset -2px -1px 4px rgba(255, 238, 184, 0.18);
+}
+
+.clay-crack {
+  height: 2px !important;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(92, 55, 22, 0.22), rgba(92, 55, 22, 0.06), transparent);
+  box-shadow:
+    0 -1px 1px rgba(255, 235, 176, 0.18),
+    0 1px 2px rgba(106, 64, 26, 0.16);
+}
+
+.clay-crack::before,
+.clay-crack::after {
+  position: absolute;
+  content: "";
+  left: 24%;
+  top: 50%;
+  width: 34%;
+  height: 1px;
+  border-radius: 999px;
+  background: rgba(90, 54, 23, 0.16);
+  transform: rotate(22deg);
+}
+
+.clay-crack::after {
+  left: 58%;
+  width: 24%;
+  transform: rotate(-28deg);
+}
+
+.clay-ridge {
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255, 237, 178, 0.18), rgba(137, 82, 34, 0.08)),
+    linear-gradient(90deg, transparent, rgba(255, 239, 186, 0.18), transparent);
+  box-shadow:
+    0 1px 3px rgba(112, 68, 28, 0.12),
+    inset 0 1px 2px rgba(255, 243, 201, 0.18),
+    inset 0 -1px 2px rgba(119, 71, 30, 0.12);
+  filter: blur(0.35px);
+}
+
+.clay-speck {
+  width: 5px !important;
+  height: 5px !important;
+  border-radius: 50%;
+  background: rgba(105, 64, 27, 0.16);
+  box-shadow:
+    1px 1px 0 rgba(255, 235, 176, 0.14),
+    inset 1px 1px 1px rgba(95, 57, 24, 0.18);
+}
+
 .plant-field,
 .word-field {
   position: absolute;
@@ -106,7 +194,7 @@ button {
 }
 
 .plant-field {
-  z-index: 1;
+  z-index: 2;
 }
 
 .plant {
@@ -213,7 +301,7 @@ button {
 }
 
 .word-field {
-  z-index: 2;
+  z-index: 3;
 }
 
 .floating-word {
