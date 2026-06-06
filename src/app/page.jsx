@@ -1,7 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion, useMotionValue } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { motion, useMotionValue } from "framer-motion";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 
 const languageWords = [
   "hello", "listen", "speak", "story", "voice", "friend", "meaning", "answer",
@@ -68,6 +68,64 @@ function createPlant(index) {
   };
 }
 
+const PlantItems = memo(function PlantItems({ plants }) {
+  return plants.map((plant) => (
+    <span
+      key={plant.id}
+      className={`plant plant-${plant.type} tone-${plant.tone}`}
+      style={{
+        left: `${plant.left}%`,
+        top: `${plant.top}%`,
+        "--plant-scale": plant.scale,
+        "--plant-rotate": `${plant.rotate}deg`
+      }}
+    >
+      {plant.type === "flower" && (
+        <>
+          <i />
+          <b />
+        </>
+      )}
+      {plant.type === "sprout" && (
+        <>
+          <i />
+          <b />
+        </>
+      )}
+      {plant.type === "leaf" && <i />}
+      {plant.type === "grass" && (
+        <>
+          <i />
+          <b />
+          <em />
+        </>
+      )}
+    </span>
+  ));
+});
+
+const WordItems = memo(function WordItems({ wordItems, dissolving }) {
+  return wordItems.map((item) => (
+    <span
+      key={item.id}
+      className={`floating-word ${dissolving.has(item.id) ? "dissolving" : ""}`}
+      style={{
+        left: `${item.left}%`,
+        top: `${item.top}%`,
+        fontSize: `${item.size}px`,
+        fontWeight: item.weight,
+        "--drift-x": `${item.driftX}px`,
+        "--drift-y": `${item.driftY}px`,
+        "--word-duration": `${item.duration}s`,
+        "--word-delay": `${item.delay}s`
+      }}
+    >
+      {item.text}
+      <small />
+    </span>
+  ));
+});
+
 function DecorativePlants({ hidden }) {
   const plants = useMemo(() => Array.from({ length: 165 }, (_, index) => createPlant(index)), []);
   return (
@@ -77,39 +135,7 @@ function DecorativePlants({ hidden }) {
       animate={{ opacity: hidden ? 0.16 : 1, scale: hidden ? 0.96 : 1 }}
       transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
     >
-      {plants.map((plant) => (
-        <span
-          key={plant.id}
-          className={`plant plant-${plant.type} tone-${plant.tone}`}
-          style={{
-            left: `${plant.left}%`,
-            top: `${plant.top}%`,
-            "--plant-scale": plant.scale,
-            "--plant-rotate": `${plant.rotate}deg`
-          }}
-        >
-          {plant.type === "flower" && (
-            <>
-              <i />
-              <b />
-            </>
-          )}
-          {plant.type === "sprout" && (
-            <>
-              <i />
-              <b />
-            </>
-          )}
-          {plant.type === "leaf" && <i />}
-          {plant.type === "grass" && (
-            <>
-              <i />
-              <b />
-              <em />
-            </>
-          )}
-        </span>
-      ))}
+      <PlantItems plants={plants} />
     </motion.div>
   );
 }
@@ -158,38 +184,8 @@ function FloatingWords({ cursor, phase }) {
   }, [cursor, phase, wordItems]);
 
   return (
-    <div className="word-field" aria-hidden="true">
-      {wordItems.map((item) => (
-        <motion.span
-          key={item.id}
-          className={`floating-word ${dissolving.has(item.id) ? "dissolving" : ""}`}
-          style={{
-            left: `${item.left}%`,
-            top: `${item.top}%`,
-            fontSize: `${item.size}px`,
-            fontWeight: item.weight,
-            "--drift-x": `${item.driftX}px`,
-            "--drift-y": `${item.driftY}px`,
-            "--word-duration": `${item.duration}s`,
-            "--word-delay": `${item.delay}s`
-          }}
-          animate={
-            phase === "collapse"
-              ? {
-                  left: "50%",
-                  top: "50%",
-                  opacity: 0,
-                  scale: 0.35,
-                  filter: "blur(10px)"
-                }
-              : undefined
-          }
-          transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] }}
-        >
-          {item.text}
-          <small />
-        </motion.span>
-      ))}
+    <div className={`word-field ${phase === "collapse" ? "collapsing" : ""}`} aria-hidden="true">
+      <WordItems wordItems={wordItems} dissolving={dissolving} />
     </div>
   );
 }
@@ -247,13 +243,14 @@ function EntryCard({ phase, onEnter }) {
   );
 }
 
-function WarmLanding({ onComplete }) {
+function WarmLanding({ onBegin, onComplete }) {
   const cursor = useRef({ x: -200, y: -200, active: false });
   const [phase, setPhase] = useState("idle");
 
   const enter = () => {
     setPhase("collapse");
-    window.setTimeout(onComplete, 1550);
+    onBegin?.();
+    window.setTimeout(onComplete, 820);
   };
 
   return (
@@ -270,16 +267,16 @@ function WarmLanding({ onComplete }) {
         className="warm-collapse"
         aria-hidden="true"
         animate={{
-          opacity: phase === "collapse" ? [0, 0.85, 0] : 0,
-          scale: phase === "collapse" ? [0.15, 1, 2.6] : 0.15
+          opacity: phase === "collapse" ? [0, 0.68, 0] : 0,
+          scale: phase === "collapse" ? [0.15, 0.92, 1.85] : 0.15
         }}
-        transition={{ duration: 1.45, times: [0, 0.46, 1], ease: "easeInOut" }}
+        transition={{ duration: 0.78, times: [0, 0.48, 1], ease: "easeInOut" }}
       />
     </motion.section>
   );
 }
 
-function SpeakingApp() {
+function SpeakingApp({ active = true }) {
   const SpeechRecognition =
     typeof window !== "undefined" ? window.SpeechRecognition || window.webkitSpeechRecognition : null;
   const [scenario, setScenario] = useState(scenarios[0]);
@@ -289,6 +286,7 @@ function SpeakingApp() {
   const recognitionRef = useRef(null);
 
   useEffect(() => {
+    if (!active) return undefined;
     if (!SpeechRecognition) return;
     const recognition = new SpeechRecognition();
     recognition.lang = "en-US";
@@ -301,7 +299,8 @@ function SpeakingApp() {
     recognition.onstart = () => setListening(true);
     recognition.onend = () => setListening(false);
     recognitionRef.current = recognition;
-  }, [SpeechRecognition]);
+    return () => recognition.abort?.();
+  }, [SpeechRecognition, active]);
 
   const submit = () => {
     if (!draft.trim()) return;
@@ -432,16 +431,38 @@ function clamp(value, min, max) {
 
 export default function Page() {
   const [entered, setEntered] = useState(false);
+  const [appMounted, setAppMounted] = useState(false);
+  const [landingVisible, setLandingVisible] = useState(true);
+
+  useEffect(() => {
+    const mountApp = () => setAppMounted(true);
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(mountApp, { timeout: 900 });
+      return () => window.cancelIdleCallback?.(id);
+    }
+    const id = window.setTimeout(mountApp, 500);
+    return () => window.clearTimeout(id);
+  }, []);
+
+  const prepareApp = () => {
+    setAppMounted(true);
+    window.setTimeout(() => setEntered(true), 260);
+  };
 
   return (
-    <AnimatePresence mode="wait">
-      {!entered ? (
-        <WarmLanding key="landing" onComplete={() => setEntered(true)} />
-      ) : (
-        <motion.div key="app" initial={{ opacity: 0, scale: 1.02 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.75 }}>
-          <SpeakingApp />
+    <div className="page-stage">
+      {(appMounted || entered) && (
+        <motion.div
+          className={`app-transition-layer ${entered ? "active" : ""} ${!landingVisible ? "settled" : ""}`}
+          aria-hidden={!entered}
+          initial={{ opacity: 0, scale: 1.01 }}
+          animate={{ opacity: entered ? 1 : 0.001, scale: 1 }}
+          transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <SpeakingApp active={entered} />
         </motion.div>
       )}
-    </AnimatePresence>
+      {landingVisible && <WarmLanding onBegin={prepareApp} onComplete={() => setLandingVisible(false)} />}
+    </div>
   );
 }
