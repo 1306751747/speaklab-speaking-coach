@@ -492,11 +492,14 @@ button {
 .app-shell {
   position: relative;
   isolation: isolate;
+  height: 100vh;
   min-height: 100vh;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   padding: clamp(20px, 3vw, 34px);
   background: var(--coach-clay) url("/assets/clay-plasticine-bg.png") center / cover no-repeat;
   color: var(--ink);
+  overscroll-behavior: contain;
 }
 
 .app-shell::before {
