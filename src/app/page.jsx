@@ -68,6 +68,43 @@ function createPlant(index) {
   };
 }
 
+function createClayMark(index) {
+  const seed = index * 23 + 17;
+  const types = ["dent", "press", "crack", "ridge", "speck"];
+  return {
+    id: index,
+    type: types[index % types.length],
+    left: random(seed) * 100,
+    top: random(seed + 1) * 100,
+    width: 10 + random(seed + 2) * 42,
+    height: 5 + random(seed + 3) * 24,
+    rotate: -34 + random(seed + 4) * 68,
+    opacity: 0.28 + random(seed + 5) * 0.34
+  };
+}
+
+function ClayRelief() {
+  const marks = useMemo(() => Array.from({ length: 118 }, (_, index) => createClayMark(index)), []);
+  return (
+    <div className="clay-relief" aria-hidden="true">
+      {marks.map((mark) => (
+        <span
+          key={mark.id}
+          className={`clay-mark clay-${mark.type}`}
+          style={{
+            left: `${mark.left}%`,
+            top: `${mark.top}%`,
+            width: `${mark.width}px`,
+            height: `${mark.height}px`,
+            opacity: mark.opacity,
+            "--mark-rotate": `${mark.rotate}deg`
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function DecorativePlants({ hidden }) {
   const plants = useMemo(() => Array.from({ length: 165 }, (_, index) => createPlant(index)), []);
   return (
@@ -263,6 +300,7 @@ function WarmLanding({ onComplete }) {
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="clay-grain" aria-hidden="true" />
+      <ClayRelief />
       <DecorativePlants hidden={phase === "collapse"} />
       <FloatingWords cursor={cursor} phase={phase} />
       <EntryCard phase={phase} onEnter={enter} />
