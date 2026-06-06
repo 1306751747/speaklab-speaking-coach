@@ -302,9 +302,20 @@ function SpeakingApp({ active = true }) {
   return (
     <main className="app-shell">
       <section className="app-hero">
-        <div>
-          <p>SpeakLab Conversation Coach</p>
+        <div className="app-hero-copy">
+          <div className="app-brand-row">
+            <span className="clay-brand-mark" aria-hidden="true">
+              <i />
+              <b />
+            </span>
+            <p>SpeakLab Conversation Coach</p>
+          </div>
           <h1>Practice real English conversations in a gentle language garden.</h1>
+          <div className="practice-summary" aria-label="Practice summary">
+            <span><b>{turns.length}</b> answers</span>
+            <span><b>{turns[0]?.analysis?.overall || "--"}</b> latest score</span>
+            <span><b>{scenario.label}</b> scene</span>
+          </div>
         </div>
         <div className="scenario-tabs">
           {scenarios.map((item) => (
@@ -314,6 +325,7 @@ function SpeakingApp({ active = true }) {
               type="button"
               onClick={() => setScenario(item)}
             >
+              <span className="scenario-dot" aria-hidden="true" />
               {item.label}
             </button>
           ))}
@@ -322,26 +334,41 @@ function SpeakingApp({ active = true }) {
 
       <section className="coach-grid">
         <div className="coach-panel dialogue-panel">
-          <span>Coach Prompt</span>
+          <div className="panel-heading">
+            <span className="panel-icon panel-icon-dialogue" aria-hidden="true" />
+            <span>Coach Prompt</span>
+          </div>
           <h2>{scenario.prompt}</h2>
           <p>{scenario.goal}</p>
-          <textarea
-            value={draft}
-            onChange={(event) => setDraft(event.target.value)}
-            placeholder="Speak with the microphone or type your answer here."
-          />
+          <div className="clay-input-shell">
+            <textarea
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              placeholder="Speak with the microphone or type your answer here."
+            />
+          </div>
           <div className="coach-actions">
             <button type="button" onClick={() => recognitionRef.current?.start()} disabled={!SpeechRecognition || listening}>
+              <span className="button-orb" aria-hidden="true" />
               {listening ? "Listening..." : "Microphone"}
             </button>
             <button type="button" onClick={submit}>
+              <span className="button-orb" aria-hidden="true" />
               Send Answer
             </button>
+          </div>
+          <div className="clay-session-strip" aria-label="Session helpers">
+            <span>Say one complete sentence.</span>
+            <span>Add a reason.</span>
+            <span>Close with a clear pause.</span>
           </div>
         </div>
 
         <div className="coach-panel score-panel-next">
-          <span>Live Feedback</span>
+          <div className="panel-heading">
+            <span className="panel-icon panel-icon-score" aria-hidden="true" />
+            <span>Live Feedback</span>
+          </div>
           <ScoreDashboard latest={turns[0]?.analysis} />
           <CorrectionList latest={turns[0]?.analysis} />
         </div>
@@ -352,9 +379,10 @@ function SpeakingApp({ active = true }) {
 
 function ScoreDashboard({ latest }) {
   const score = latest || { overall: "--", fluency: "--", grammar: "--", relevance: "--" };
+  const progress = typeof score.overall === "number" ? `${score.overall * 3.6}deg` : "0deg";
   return (
     <div className="score-dashboard">
-      <strong>{score.overall}</strong>
+      <strong className="score-ring" style={{ "--score-progress": progress }}>{score.overall}</strong>
       <div>
         <p>Fluency <span>{score.fluency}</span></p>
         <p>Grammar <span>{score.grammar}</span></p>
