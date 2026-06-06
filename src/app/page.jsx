@@ -237,8 +237,11 @@ function EntryCard({ phase, onEnter }) {
       whileHover={phase === "idle" ? { scale: 1.045 } : undefined}
       transition={{ type: "spring", stiffness: 150, damping: 19 }}
     >
-      <span>SpeakLab</span>
-      <strong>Start Communicating</strong>
+      <span className="card-kicker">SpeakLab</span>
+      <strong aria-label="Start Communicating">
+        <span>Start</span>
+        <span>Communicating</span>
+      </strong>
       <em>soft practice for real English moments</em>
     </motion.button>
   );
