@@ -70,16 +70,16 @@ function createPlant(index) {
 
 function createClayMark(index) {
   const seed = index * 23 + 17;
-  const types = ["dent", "press", "crack", "ridge", "speck"];
+  const types = ["dent", "press", "pillow", "ridge", "pore"];
   return {
     id: index,
     type: types[index % types.length],
     left: random(seed) * 100,
     top: random(seed + 1) * 100,
-    width: 10 + random(seed + 2) * 42,
-    height: 5 + random(seed + 3) * 24,
-    rotate: -34 + random(seed + 4) * 68,
-    opacity: 0.28 + random(seed + 5) * 0.34
+    width: 16 + random(seed + 2) * 54,
+    height: 8 + random(seed + 3) * 30,
+    rotate: -20 + random(seed + 4) * 40,
+    opacity: 0.18 + random(seed + 5) * 0.24
   };
 }
 
@@ -110,40 +110,40 @@ function ClayMaterialCanvas() {
       };
 
       const base = ctx.createLinearGradient(0, 0, width, height);
-      base.addColorStop(0, "#f5cf77");
-      base.addColorStop(0.32, "#edbd5f");
-      base.addColorStop(0.68, "#e3ad53");
-      base.addColorStop(1, "#dca04e");
+      base.addColorStop(0, "#f8d77f");
+      base.addColorStop(0.34, "#f2c66c");
+      base.addColorStop(0.7, "#ebb85e");
+      base.addColorStop(1, "#e3ad57");
       ctx.fillStyle = base;
       ctx.fillRect(0, 0, width, height);
 
       const castLight = ctx.createRadialGradient(width * 0.22, height * 0.12, 0, width * 0.22, height * 0.12, width * 0.72);
-      castLight.addColorStop(0, "rgba(255, 244, 196, 0.5)");
-      castLight.addColorStop(0.48, "rgba(255, 224, 143, 0.16)");
+      castLight.addColorStop(0, "rgba(255, 247, 205, 0.58)");
+      castLight.addColorStop(0.48, "rgba(255, 226, 146, 0.18)");
       castLight.addColorStop(1, "rgba(150, 86, 34, 0)");
       ctx.fillStyle = castLight;
       ctx.fillRect(0, 0, width, height);
 
       const lowerShadow = ctx.createRadialGradient(width * 0.76, height * 0.9, 0, width * 0.76, height * 0.9, width * 0.7);
-      lowerShadow.addColorStop(0, "rgba(111, 65, 25, 0.18)");
-      lowerShadow.addColorStop(0.6, "rgba(141, 82, 32, 0.08)");
+      lowerShadow.addColorStop(0, "rgba(172, 103, 42, 0.13)");
+      lowerShadow.addColorStop(0.6, "rgba(213, 145, 62, 0.06)");
       lowerShadow.addColorStop(1, "rgba(111, 65, 25, 0)");
       ctx.fillStyle = lowerShadow;
       ctx.fillRect(0, 0, width, height);
 
       ctx.globalCompositeOperation = "soft-light";
-      for (let i = 0; i < 70; i += 1) {
+      for (let i = 0; i < 54; i += 1) {
         const x = rand() * width;
         const y = rand() * height;
-        const rx = 80 + rand() * 260;
-        const ry = 34 + rand() * 150;
+        const rx = 120 + rand() * 320;
+        const ry = 54 + rand() * 180;
         const angle = rand() * Math.PI;
         const warm = rand() > 0.46;
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(angle);
         const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
-        gradient.addColorStop(0, warm ? "rgba(255, 239, 180, 0.28)" : "rgba(118, 70, 27, 0.2)");
+        gradient.addColorStop(0, warm ? "rgba(255, 241, 184, 0.24)" : "rgba(201, 128, 50, 0.14)");
         gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
         ctx.fillStyle = gradient;
         ctx.beginPath();
@@ -153,27 +153,27 @@ function ClayMaterialCanvas() {
       }
 
       ctx.globalCompositeOperation = "source-over";
-      for (let i = 0; i < 145; i += 1) {
+      for (let i = 0; i < 132; i += 1) {
         const x = rand() * width;
         const y = rand() * height;
-        const rx = 10 + rand() * 58;
-        const ry = 5 + rand() * 28;
+        const rx = 18 + rand() * 82;
+        const ry = 10 + rand() * 42;
         const angle = rand() * Math.PI;
         const dent = rand() > 0.36;
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(angle);
-        ctx.shadowBlur = 5 + rand() * 9;
-        ctx.shadowColor = dent ? "rgba(91, 54, 22, 0.18)" : "rgba(255, 239, 185, 0.22)";
+        ctx.shadowBlur = 10 + rand() * 16;
+        ctx.shadowColor = dent ? "rgba(153, 92, 36, 0.12)" : "rgba(255, 240, 191, 0.2)";
         const gradient = ctx.createRadialGradient(-rx * 0.26, -ry * 0.32, 0, 0, 0, rx);
         if (dent) {
-          gradient.addColorStop(0, "rgba(92, 55, 22, 0.22)");
-          gradient.addColorStop(0.46, "rgba(155, 91, 36, 0.09)");
-          gradient.addColorStop(0.72, "rgba(255, 232, 164, 0.16)");
+          gradient.addColorStop(0, "rgba(151, 91, 36, 0.14)");
+          gradient.addColorStop(0.5, "rgba(218, 151, 65, 0.06)");
+          gradient.addColorStop(0.78, "rgba(255, 238, 180, 0.18)");
           gradient.addColorStop(1, "rgba(255, 232, 164, 0)");
         } else {
-          gradient.addColorStop(0, "rgba(255, 241, 193, 0.26)");
-          gradient.addColorStop(0.58, "rgba(232, 174, 88, 0.08)");
+          gradient.addColorStop(0, "rgba(255, 244, 198, 0.3)");
+          gradient.addColorStop(0.58, "rgba(239, 183, 92, 0.08)");
           gradient.addColorStop(1, "rgba(92, 55, 22, 0)");
         }
         ctx.fillStyle = gradient;
@@ -183,47 +183,46 @@ function ClayMaterialCanvas() {
         ctx.restore();
       }
 
-      for (let i = 0; i < 118; i += 1) {
+      ctx.globalCompositeOperation = "soft-light";
+      for (let i = 0; i < 86; i += 1) {
         const x = rand() * width;
         const y = rand() * height;
-        const length = 18 + rand() * 96;
-        const waviness = 4 + rand() * 16;
-        const angle = -0.65 + rand() * 1.3;
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(angle);
-        ctx.lineCap = "round";
-        ctx.lineWidth = 0.7 + rand() * 1.25;
-        ctx.strokeStyle = rand() > 0.52 ? "rgba(90, 54, 22, 0.18)" : "rgba(255, 239, 188, 0.22)";
-        ctx.shadowBlur = 2;
-        ctx.shadowColor = "rgba(93, 57, 24, 0.08)";
-        ctx.beginPath();
-        ctx.moveTo(-length / 2, 0);
-        ctx.bezierCurveTo(-length * 0.18, -waviness, length * 0.18, waviness, length / 2, (rand() - 0.5) * waviness);
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      for (let i = 0; i < 44; i += 1) {
-        const x = rand() * width;
-        const y = rand() * height;
-        const length = 24 + rand() * 86;
+        const rx = 28 + rand() * 110;
+        const ry = 8 + rand() * 30;
         const angle = rand() * Math.PI;
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(angle);
-        ctx.lineCap = "round";
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = "rgba(79, 47, 19, 0.2)";
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = "rgba(162, 98, 39, 0.08)";
+        const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
+        gradient.addColorStop(0, rand() > 0.5 ? "rgba(255, 245, 205, 0.18)" : "rgba(180, 111, 45, 0.12)");
+        gradient.addColorStop(0.72, "rgba(229, 158, 70, 0.04)");
+        gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+        ctx.fillStyle = gradient;
         ctx.beginPath();
-        ctx.moveTo(-length / 2, 0);
-        for (let step = 0; step < 4; step += 1) {
-          ctx.lineTo(-length / 2 + (length * (step + 1)) / 4, (rand() - 0.5) * 10);
-        }
-        ctx.stroke();
-        ctx.strokeStyle = "rgba(255, 238, 180, 0.16)";
-        ctx.translate(0, -1.3);
-        ctx.stroke();
+        ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      ctx.globalCompositeOperation = "source-over";
+      for (let i = 0; i < 58; i += 1) {
+        const x = rand() * width;
+        const y = rand() * height;
+        const radius = 3 + rand() * 11;
+        const angle = rand() * Math.PI;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+        const pore = ctx.createRadialGradient(-radius * 0.28, -radius * 0.3, 0, 0, 0, radius);
+        pore.addColorStop(0, "rgba(156, 96, 39, 0.12)");
+        pore.addColorStop(0.62, "rgba(219, 151, 64, 0.05)");
+        pore.addColorStop(1, "rgba(255, 238, 181, 0.08)");
+        ctx.fillStyle = pore;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, radius, radius * (0.55 + rand() * 0.5), 0, 0, Math.PI * 2);
+        ctx.fill();
         ctx.restore();
       }
 
@@ -235,16 +234,16 @@ function ClayMaterialCanvas() {
       const image = grainCtx.createImageData(grainSize, grainSize);
       for (let i = 0; i < image.data.length; i += 4) {
         const n = rand();
-        const alpha = n > 0.52 ? Math.floor(18 + n * 34) : Math.floor(4 + n * 14);
-        const dark = n > 0.68;
-        image.data[i] = dark ? 90 : 255;
-        image.data[i + 1] = dark ? 58 : 235;
-        image.data[i + 2] = dark ? 24 : 176;
+        const alpha = n > 0.54 ? Math.floor(6 + n * 16) : Math.floor(2 + n * 7);
+        const dark = n > 0.76;
+        image.data[i] = dark ? 181 : 255;
+        image.data[i + 1] = dark ? 118 : 239;
+        image.data[i + 2] = dark ? 49 : 186;
         image.data[i + 3] = alpha;
       }
       grainCtx.putImageData(image, 0, 0);
-      ctx.globalAlpha = 0.32;
-      ctx.globalCompositeOperation = "multiply";
+      ctx.globalAlpha = 0.22;
+      ctx.globalCompositeOperation = "soft-light";
       const pattern = ctx.createPattern(grainCanvas, "repeat");
       ctx.fillStyle = pattern;
       ctx.fillRect(0, 0, width, height);
