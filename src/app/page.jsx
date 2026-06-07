@@ -17,49 +17,77 @@ const scenarios = [
     label: "面试",
     title: "面试口语",
     prompt: "请试着用英语介绍一个你最有成就感的项目。",
-    goal: "练习用角色、行动、结果和反思组织回答。"
+    goal: "练习用角色、行动、结果和反思组织回答。",
+    task: "用 STAR 结构完成一次项目经历回答",
+    duration: "3 分钟",
+    mustSay: ["项目背景", "你的角色", "结果和收获"],
+    patterns: ["I was responsible for...", "The biggest challenge was...", "As a result..."]
   },
   {
     id: "restaurant",
     label: "点餐",
     title: "点餐表达",
     prompt: "请试着用英语完成一次温柔自然的点餐对话。",
-    goal: "练习偏好、忌口、询问推荐和确认订单。"
+    goal: "练习偏好、忌口、询问推荐和确认订单。",
+    task: "完成推荐询问、忌口说明和订单确认",
+    duration: "3 分钟",
+    mustSay: ["你想点什么", "是否有忌口", "确认订单"],
+    patterns: ["What do you recommend?", "I am allergic to...", "Could you confirm my order?"]
   },
   {
     id: "meeting",
     label: "会议",
     title: "会议沟通",
     prompt: "请试着用英语说说你最近的进展和变化。",
-    goal: "练习简洁汇报、说明阻碍、提出方案和确认行动项。"
+    goal: "练习简洁汇报、说明阻碍、提出方案和确认行动项。",
+    task: "完成一次进展、阻碍和下一步汇报",
+    duration: "3 分钟",
+    mustSay: ["最近进展", "当前阻碍", "下一步行动"],
+    patterns: ["Here is my progress...", "The main blocker is...", "Next, I will..."]
   },
   {
     id: "travel",
     label: "旅行",
     title: "旅行沟通",
     prompt: "请试着用英语说明你的入住需求和今天的旅行安排。",
-    goal: "练习酒店入住、交通询问、行程安排和礼貌确认。"
+    goal: "练习酒店入住、交通询问、行程安排和礼貌确认。",
+    task: "完成酒店入住确认和交通询问",
+    duration: "3 分钟",
+    mustSay: ["预订信息", "入住时间", "交通需求"],
+    patterns: ["I have a reservation under...", "Could I check in now?", "How can I get to...?"]
   },
   {
     id: "campus",
     label: "校园",
     title: "校园交流",
     prompt: "请试着用英语和同学讨论一次课程任务或学习计划。",
-    goal: "练习课堂讨论、学习计划、同学协作和观点表达。"
+    goal: "练习课堂讨论、学习计划、同学协作和观点表达。",
+    task: "和同学说明学习计划并提出协作请求",
+    duration: "3 分钟",
+    mustSay: ["课程任务", "你的计划", "需要的帮助"],
+    patterns: ["For this assignment...", "My plan is to...", "Could we work together on...?"]
   },
   {
     id: "support",
     label: "客服",
     title: "客服求助",
     prompt: "请试着用英语描述你遇到的问题，并请求对方帮助解决。",
-    goal: "练习说明问题、补充细节、确认方案和表达感谢。"
+    goal: "练习说明问题、补充细节、确认方案和表达感谢。",
+    task: "清楚描述问题并确认解决方案",
+    duration: "3 分钟",
+    mustSay: ["遇到的问题", "已尝试的方法", "希望的解决方案"],
+    patterns: ["I am having trouble with...", "I have already tried...", "Could you help me with...?"]
   },
   {
     id: "social",
     label: "社交",
     title: "社交寒暄",
     prompt: "请试着用英语做一个轻松自然的自我介绍。",
-    goal: "练习兴趣表达、轻松寒暄、延展话题和自然回应。"
+    goal: "练习兴趣表达、轻松寒暄、延展话题和自然回应。",
+    task: "完成自我介绍并自然延展一个话题",
+    duration: "3 分钟",
+    mustSay: ["你的名字", "一个兴趣", "一个追问"],
+    patterns: ["Nice to meet you.", "I am interested in...", "What about you?"]
   }
 ];
 
@@ -310,6 +338,7 @@ function SpeakingApp({ active = true }) {
   const [turns, setTurns] = useState([]);
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef(null);
+  const practiceRef = useRef(null);
 
   useEffect(() => {
     if (!active) return undefined;
@@ -339,6 +368,10 @@ function SpeakingApp({ active = true }) {
     window.speechSynthesis?.speak(utterance);
   };
 
+  const startDailyPractice = () => {
+    practiceRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <main className="app-shell">
       <section className="growth-dashboard">
@@ -354,6 +387,17 @@ function SpeakingApp({ active = true }) {
               <b />
             </span>
           </header>
+
+          <article className="daily-practice-card soft-card">
+            <div>
+              <span className="section-kicker">今日 3 分钟练习</span>
+              <h2>{scenario.task}</h2>
+              <p>{scenario.goal}</p>
+            </div>
+            <button type="button" onClick={startDailyPractice}>
+              开始练习
+            </button>
+          </article>
 
           <div className="metric-row">
             <article className="metric-card soft-card">
@@ -418,13 +462,31 @@ function SpeakingApp({ active = true }) {
             </div>
           </section>
 
-          <section className="coach-panel dialogue-panel soft-card">
+          <section className="coach-panel dialogue-panel soft-card" ref={practiceRef}>
             <div className="panel-heading">
               <span className="panel-icon panel-icon-dialogue" aria-hidden="true" />
               <span>今日练习</span>
             </div>
             <h2>{scenario.prompt}</h2>
             <p>{scenario.goal}</p>
+            <div className="task-helper-grid" aria-label="练习任务提示">
+              <div>
+                <span className="section-kicker">必说 3 点</span>
+                <ul>
+                  {scenario.mustSay.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <span className="section-kicker">可用句型</span>
+                <ul>
+                  {scenario.patterns.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
             <div className="clay-input-shell">
               <textarea
                 value={draft}
@@ -456,6 +518,7 @@ function SpeakingApp({ active = true }) {
             </div>
             <ScoreDashboard latest={turns[0]?.analysis} />
             <CorrectionList latest={turns[0]?.analysis} />
+            <SessionSummary latest={turns[0]?.analysis} scenario={scenario} />
           </section>
         </aside>
       </section>
@@ -489,6 +552,40 @@ function CorrectionList({ latest }) {
       {items.map((item, index) => (
         <p key={index}>{item}</p>
       ))}
+    </div>
+  );
+}
+
+function SessionSummary({ latest, scenario }) {
+  if (!latest) {
+    return (
+      <div className="session-summary">
+        <span className="section-kicker">课后总结</span>
+        <p>完成一次回答后，这里会生成你的表达亮点、推荐改写和下次重点。</p>
+      </div>
+    );
+  }
+
+  const rewrite = scenario.patterns[0];
+  const focus = latest.relevance < 72 ? "下次重点补充场景关键词，让回答更贴近任务。" : "下次可以加入更具体的例子，让表达更有画面感。";
+
+  return (
+    <div className="session-summary">
+      <span className="section-kicker">课后总结</span>
+      <div className="summary-grid">
+        <article>
+          <b>表达亮点</b>
+          <p>你已经完成了本轮表达，整体意思比较清楚。</p>
+        </article>
+        <article>
+          <b>推荐改写</b>
+          <p>{rewrite}</p>
+        </article>
+        <article>
+          <b>下次重点</b>
+          <p>{focus}</p>
+        </article>
+      </div>
     </div>
   );
 }
