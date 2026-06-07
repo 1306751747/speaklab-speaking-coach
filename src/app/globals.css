@@ -46,6 +46,61 @@ button {
   cursor: pointer;
 }
 
+.scenario-tabs.compact,
+.clay-input-shell textarea,
+.scaffold-input-row textarea {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(142, 95, 45, 0.46) rgba(255, 235, 178, 0.2);
+}
+
+.scenario-tabs.compact::-webkit-scrollbar,
+.clay-input-shell textarea::-webkit-scrollbar,
+.scaffold-input-row textarea::-webkit-scrollbar {
+  width: 12px;
+}
+
+.scenario-tabs.compact::-webkit-scrollbar-track,
+.clay-input-shell textarea::-webkit-scrollbar-track,
+.scaffold-input-row textarea::-webkit-scrollbar-track {
+  margin: 10px 0;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255, 244, 203, 0.42), rgba(210, 157, 71, 0.14)),
+    rgba(255, 231, 164, 0.2);
+  box-shadow:
+    inset 2px 2px 5px rgba(121, 80, 34, 0.14),
+    inset -2px -2px 5px rgba(255, 247, 214, 0.52);
+}
+
+.scenario-tabs.compact::-webkit-scrollbar-thumb,
+.clay-input-shell textarea::-webkit-scrollbar-thumb,
+.scaffold-input-row textarea::-webkit-scrollbar-thumb {
+  min-height: 42px;
+  border: 3px solid rgba(248, 220, 157, 0.78);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(171, 118, 55, 0.72), rgba(120, 78, 35, 0.52)),
+    #b98743;
+  box-shadow:
+    inset 1px 1px 2px rgba(255, 238, 190, 0.46),
+    inset -1px -2px 3px rgba(88, 56, 26, 0.22),
+    0 2px 5px rgba(120, 76, 31, 0.16);
+}
+
+.scenario-tabs.compact::-webkit-scrollbar-thumb:hover,
+.clay-input-shell textarea::-webkit-scrollbar-thumb:hover,
+.scaffold-input-row textarea::-webkit-scrollbar-thumb:hover {
+  background:
+    linear-gradient(180deg, rgba(151, 101, 46, 0.82), rgba(104, 67, 31, 0.62)),
+    #a77439;
+}
+
+.scenario-tabs.compact::-webkit-scrollbar-corner,
+.clay-input-shell textarea::-webkit-scrollbar-corner,
+.scaffold-input-row textarea::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 .page-stage {
   position: relative;
   min-height: 100vh;
@@ -1741,6 +1796,8 @@ button {
   max-height: 210px;
   overflow-y: auto;
   overscroll-behavior: contain;
+  padding-right: 12px;
+  scrollbar-gutter: stable;
 }
 
 .scenario-tabs button,
