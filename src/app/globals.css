@@ -1245,11 +1245,140 @@ button {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(320px, 0.92fr) minmax(420px, 1.08fr);
-  gap: clamp(18px, 2.4vw, 28px);
+  grid-template-columns: 1fr;
+  gap: clamp(16px, 2vw, 24px);
   width: min(1180px, calc(100vw - clamp(36px, 6vw, 68px)));
   margin: 0 auto;
   padding-bottom: 34px;
+}
+
+.workbench-top {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.95fr) minmax(320px, 1.2fr) minmax(220px, 0.65fr);
+  gap: 18px;
+  align-items: stretch;
+  padding: clamp(20px, 2.6vw, 28px);
+}
+
+.workbench-top .welcome-copy {
+  align-self: center;
+}
+
+.workbench-top h1 {
+  margin: 16px 0 8px;
+  color: #5e4326;
+  font-size: clamp(30px, 3.6vw, 44px);
+  line-height: 1.08;
+}
+
+.workbench-top p {
+  margin: 0;
+  color: rgba(94, 67, 38, 0.68);
+  line-height: 1.6;
+}
+
+.top-task-card,
+.top-support {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.top-task-card {
+  align-content: center;
+  padding: 16px;
+  border-radius: 24px;
+  background: var(--coach-clay-soft);
+  box-shadow:
+    inset 3px 3px 8px rgba(120, 76, 31, 0.08),
+    inset -3px -3px 8px rgba(255, 242, 202, 0.55);
+}
+
+.top-task-card b {
+  color: #5e4326;
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.2;
+}
+
+.top-task-card p {
+  color: rgba(94, 67, 38, 0.66);
+}
+
+.top-task-card button {
+  justify-self: start;
+  min-height: 42px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 18px;
+  color: #5e4326;
+  background: var(--coach-clay);
+  font-weight: 900;
+  box-shadow:
+    -4px -4px 9px rgba(255, 241, 196, 0.56),
+    5px 6px 11px rgba(120, 76, 31, 0.13);
+}
+
+.mini-metrics {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.mini-metrics span,
+.mini-affirmation {
+  border-radius: 20px;
+  background: var(--coach-clay-soft);
+  box-shadow:
+    inset 3px 3px 7px rgba(120, 76, 31, 0.08),
+    inset -3px -3px 7px rgba(255, 242, 202, 0.54);
+}
+
+.mini-metrics span {
+  padding: 12px 14px;
+  color: rgba(94, 67, 38, 0.66);
+  font-size: 13px;
+}
+
+.mini-metrics b {
+  color: #5e4326;
+  font-size: 19px;
+}
+
+.mini-affirmation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+}
+
+.mini-affirmation .tiny-sprout {
+  width: 38px;
+  height: 38px;
+  border-radius: 16px;
+}
+
+.mini-affirmation p {
+  color: rgba(94, 67, 38, 0.7);
+  font-size: 13px;
+}
+
+.workbench-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.34fr) minmax(0, 0.66fr);
+  gap: clamp(16px, 2vw, 24px);
+  align-items: start;
+}
+
+.practice-nav,
+.practice-main {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  min-width: 0;
+}
+
+.practice-main {
+  grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.62fr);
 }
 
 .growth-main,
@@ -1554,7 +1683,46 @@ button {
 
 .scenario-card {
   display: grid;
-  gap: 16px;
+  gap: 14px;
+}
+
+.mode-toggle,
+.category-tabs {
+  display: grid;
+  gap: 8px;
+}
+
+.mode-toggle {
+  grid-template-columns: 1fr 1fr;
+  padding: 7px;
+  border-radius: 22px;
+  background: rgba(207, 153, 65, 0.18);
+  box-shadow:
+    inset 4px 4px 9px rgba(120, 76, 31, 0.09),
+    inset -4px -4px 9px rgba(255, 242, 202, 0.5);
+}
+
+.mode-toggle button,
+.category-tabs button {
+  min-height: 38px;
+  border: 0;
+  border-radius: 999px;
+  color: rgba(94, 67, 38, 0.72);
+  background: transparent;
+  font-weight: 800;
+}
+
+.mode-toggle button.active,
+.category-tabs button.active {
+  color: #5e4326;
+  background: var(--coach-clay-soft);
+  box-shadow:
+    -3px -3px 7px rgba(255, 241, 196, 0.5),
+    4px 5px 9px rgba(120, 76, 31, 0.1);
+}
+
+.category-tabs {
+  grid-template-columns: 1fr 1fr;
 }
 
 .scenario-tabs {
@@ -1569,14 +1737,26 @@ button {
     inset -5px -5px 10px rgba(255, 242, 202, 0.5);
 }
 
+.scenario-tabs.compact {
+  max-height: 210px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 .scenario-tabs button,
+.free-chat-tab,
 .coach-actions button {
   border: 0;
   color: #5e4326;
   background: var(--coach-clay);
 }
 
-.scenario-tabs button {
+.scenario-tabs button,
+.free-chat-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
   min-height: 42px;
   padding: 0 16px;
   border-radius: 999px;
@@ -1585,7 +1765,17 @@ button {
     5px 6px 11px rgba(120, 76, 31, 0.12);
 }
 
-.scenario-tabs button.active {
+.free-chat-tab {
+  width: 100%;
+  min-height: 48px;
+  background:
+    linear-gradient(145deg, rgba(255, 244, 205, 0.66), rgba(239, 199, 111, 0.24)),
+    var(--coach-clay);
+  font-weight: 900;
+}
+
+.scenario-tabs button.active,
+.free-chat-tab.active {
   background: var(--coach-clay-soft);
   box-shadow:
     inset 4px 4px 8px rgba(120, 76, 31, 0.13),
@@ -1900,6 +2090,31 @@ button {
   margin-top: 0;
 }
 
+.free-chat-reply {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border-radius: 22px;
+  background: var(--coach-clay-soft);
+  box-shadow:
+    -4px -4px 9px rgba(255, 241, 196, 0.52),
+    5px 6px 12px rgba(120, 76, 31, 0.12),
+    inset 5px 0 0 rgba(127, 155, 95, 0.72);
+}
+
+.free-chat-reply p {
+  margin: 0;
+  color: #5e4326;
+  line-height: 1.55;
+}
+
+.free-chat-reply em {
+  color: rgba(94, 67, 38, 0.56);
+  font-size: 13px;
+  font-style: normal;
+  line-height: 1.5;
+}
+
 .correction-stack > p {
   box-shadow:
     -4px -4px 9px rgba(255, 241, 196, 0.52),
@@ -2012,8 +2227,15 @@ button {
 }
 
 @media (max-width: 980px) {
-  .growth-dashboard {
+  .growth-dashboard,
+  .workbench-top,
+  .workbench-grid,
+  .practice-main {
     grid-template-columns: 1fr;
+  }
+
+  .practice-nav {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -2036,7 +2258,9 @@ button {
   .module-grid,
   .score-dashboard,
   .task-helper-grid,
-  .scaffold-input-row {
+  .scaffold-input-row,
+  .mode-toggle,
+  .category-tabs {
     grid-template-columns: 1fr;
   }
 

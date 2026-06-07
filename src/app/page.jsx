@@ -13,7 +13,56 @@ const languageWords = [
 
 const scenarios = [
   {
+    id: "daily_chat",
+    category: "基础生活",
+    label: "日常聊天",
+    title: "日常聊天",
+    prompt: "请试着用英语聊聊今天发生的一件小事。",
+    goal: "练习自然寒暄、补充细节和轻松回应。",
+    task: "完成一次日常聊天开场和回应",
+    duration: "3 分钟",
+    mustSay: ["今天发生了什么", "你的感受", "一个追问"],
+    patterns: ["Today I want to share...", "It made me feel...", "How about you?"]
+  },
+  {
+    id: "self_intro",
+    category: "基础生活",
+    label: "自我介绍",
+    title: "自我介绍",
+    prompt: "请试着用英语做一个轻松自然的自我介绍。",
+    goal: "练习介绍姓名、背景、兴趣和一个延展话题。",
+    task: "完成一次自然自我介绍",
+    duration: "3 分钟",
+    mustSay: ["你的名字", "你的背景", "一个兴趣"],
+    patterns: ["Nice to meet you.", "I am currently...", "I am interested in..."]
+  },
+  {
+    id: "directions",
+    category: "基础生活",
+    label: "问路",
+    title: "问路表达",
+    prompt: "请试着用英语询问路线，并确认怎么到达目的地。",
+    goal: "练习礼貌提问、地点描述和确认路线。",
+    task: "完成一次问路和路线确认",
+    duration: "3 分钟",
+    mustSay: ["目的地", "当前位置", "确认路线"],
+    patterns: ["Excuse me, how can I get to...?", "Is it far from here?", "Should I turn left or right?"]
+  },
+  {
+    id: "shopping",
+    category: "基础生活",
+    label: "购物",
+    title: "购物沟通",
+    prompt: "请试着用英语询问商品、价格和尺码。",
+    goal: "练习询价、描述需求、确认购买信息。",
+    task: "完成一次购物询问和确认",
+    duration: "3 分钟",
+    mustSay: ["想买什么", "价格或尺码", "确认付款"],
+    patterns: ["How much is this?", "Do you have this in...?", "I would like to buy it."]
+  },
+  {
     id: "interview",
+    category: "学习工作",
     label: "面试",
     title: "面试口语",
     prompt: "请试着用英语介绍一个你最有成就感的项目。",
@@ -25,7 +74,8 @@ const scenarios = [
   },
   {
     id: "restaurant",
-    label: "点餐",
+    category: "基础生活",
+    label: "餐厅点餐",
     title: "点餐表达",
     prompt: "请试着用英语完成一次温柔自然的点餐对话。",
     goal: "练习偏好、忌口、询问推荐和确认订单。",
@@ -36,6 +86,7 @@ const scenarios = [
   },
   {
     id: "meeting",
+    category: "学习工作",
     label: "会议",
     title: "会议沟通",
     prompt: "请试着用英语说说你最近的进展和变化。",
@@ -47,6 +98,7 @@ const scenarios = [
   },
   {
     id: "travel",
+    category: "旅行应急",
     label: "旅行",
     title: "旅行沟通",
     prompt: "请试着用英语说明你的入住需求和今天的旅行安排。",
@@ -58,8 +110,9 @@ const scenarios = [
   },
   {
     id: "campus",
-    label: "校园",
-    title: "校园交流",
+    category: "学习工作",
+    label: "课堂讨论",
+    title: "课堂讨论",
     prompt: "请试着用英语和同学讨论一次课程任务或学习计划。",
     goal: "练习课堂讨论、学习计划、同学协作和观点表达。",
     task: "和同学说明学习计划并提出协作请求",
@@ -69,6 +122,7 @@ const scenarios = [
   },
   {
     id: "support",
+    category: "旅行应急",
     label: "客服",
     title: "客服求助",
     prompt: "请试着用英语描述你遇到的问题，并请求对方帮助解决。",
@@ -80,16 +134,221 @@ const scenarios = [
   },
   {
     id: "social",
-    label: "社交",
-    title: "社交寒暄",
+    category: "社交表达",
+    label: "交朋友",
+    title: "交朋友",
     prompt: "请试着用英语做一个轻松自然的自我介绍。",
     goal: "练习兴趣表达、轻松寒暄、延展话题和自然回应。",
     task: "完成自我介绍并自然延展一个话题",
     duration: "3 分钟",
     mustSay: ["你的名字", "一个兴趣", "一个追问"],
     patterns: ["Nice to meet you.", "I am interested in...", "What about you?"]
+  },
+  {
+    id: "hotel",
+    category: "基础生活",
+    label: "酒店入住",
+    title: "酒店入住",
+    prompt: "请试着用英语完成酒店入住，并说明你的房间需求。",
+    goal: "练习预订确认、入住时间、房间需求和礼貌沟通。",
+    task: "完成一次酒店入住确认",
+    duration: "3 分钟",
+    mustSay: ["预订姓名", "入住时间", "房间需求"],
+    patterns: ["I have a reservation under...", "Could I check in now?", "Could I have a quiet room?"]
+  },
+  {
+    id: "airport",
+    category: "基础生活",
+    label: "机场出行",
+    title: "机场出行",
+    prompt: "请试着用英语询问登机口、行李和航班信息。",
+    goal: "练习机场问询、确认信息和应对延误。",
+    task: "完成一次机场信息确认",
+    duration: "3 分钟",
+    mustSay: ["航班信息", "行李问题", "登机口确认"],
+    patterns: ["Where is gate...?", "Can I check this bag?", "Has the flight been delayed?"]
+  },
+  {
+    id: "medical",
+    category: "基础生活",
+    label: "看病就医",
+    title: "看病就医",
+    prompt: "请试着用英语描述身体不舒服的情况。",
+    goal: "练习症状描述、持续时间和请求建议。",
+    task: "清楚描述症状并询问建议",
+    duration: "3 分钟",
+    mustSay: ["哪里不舒服", "持续多久", "希望得到什么帮助"],
+    patterns: ["I don't feel well.", "I have had this for...", "What should I do?"]
+  },
+  {
+    id: "report",
+    category: "学习工作",
+    label: "汇报",
+    title: "工作汇报",
+    prompt: "请试着用英语做一次简洁的工作进度汇报。",
+    goal: "练习进展、问题、数据和下一步计划。",
+    task: "完成一次进度和下一步汇报",
+    duration: "3 分钟",
+    mustSay: ["已完成内容", "遇到的问题", "下一步计划"],
+    patterns: ["So far, I have finished...", "The main issue is...", "Next, I plan to..."]
+  },
+  {
+    id: "email",
+    category: "学习工作",
+    label: "邮件沟通",
+    title: "邮件沟通",
+    prompt: "请试着用英语说明一封工作邮件的核心内容。",
+    goal: "练习清晰表达请求、背景和截止时间。",
+    task: "完成一次邮件内容口头说明",
+    duration: "3 分钟",
+    mustSay: ["邮件目的", "需要对方做什么", "截止时间"],
+    patterns: ["I am writing to...", "Could you please...?", "It would be helpful if..."]
+  },
+  {
+    id: "project",
+    category: "学习工作",
+    label: "项目沟通",
+    title: "项目沟通",
+    prompt: "请试着用英语和同事沟通项目安排。",
+    goal: "练习任务分工、时间线、风险和协作请求。",
+    task: "说明项目安排并确认分工",
+    duration: "3 分钟",
+    mustSay: ["任务分工", "时间安排", "风险或请求"],
+    patterns: ["Could you take care of...?", "The deadline is...", "One possible risk is..."]
+  },
+  {
+    id: "academic",
+    category: "学习工作",
+    label: "学术交流",
+    title: "学术交流",
+    prompt: "请试着用英语说明一个学习或研究观点。",
+    goal: "练习观点表达、理由和例子。",
+    task: "表达一个学术观点并补充理由",
+    duration: "3 分钟",
+    mustSay: ["你的观点", "一个理由", "一个例子"],
+    patterns: ["In my opinion...", "One reason is...", "For example..."]
+  },
+  {
+    id: "hobby",
+    category: "社交表达",
+    label: "兴趣爱好",
+    title: "兴趣爱好",
+    prompt: "请试着用英语介绍一个你喜欢的兴趣爱好。",
+    goal: "练习描述兴趣、原因和相关经历。",
+    task: "介绍一个兴趣并延展话题",
+    duration: "3 分钟",
+    mustSay: ["你的兴趣", "为什么喜欢", "最近一次经历"],
+    patterns: ["I enjoy...", "I like it because...", "The last time I did it..."]
+  },
+  {
+    id: "emotion",
+    category: "社交表达",
+    label: "情绪表达",
+    title: "情绪表达",
+    prompt: "请试着用英语表达你最近的一种心情。",
+    goal: "练习情绪词、原因和自我照顾表达。",
+    task: "表达一种情绪并说明原因",
+    duration: "3 分钟",
+    mustSay: ["你的心情", "原因", "你想怎么调整"],
+    patterns: ["Today I feel...", "I think it is because...", "I want to..."]
+  },
+  {
+    id: "opinion",
+    category: "社交表达",
+    label: "表达观点",
+    title: "表达观点",
+    prompt: "请试着用英语表达你对一个话题的看法。",
+    goal: "练习观点、理由、例子和礼貌表达不同意见。",
+    task: "表达一个观点并给出理由",
+    duration: "3 分钟",
+    mustSay: ["你的观点", "理由", "例子"],
+    patterns: ["I think...", "In my view...", "I partly agree because..."]
+  },
+  {
+    id: "story",
+    category: "社交表达",
+    label: "讲述经历",
+    title: "讲述经历",
+    prompt: "请试着用英语讲述一次让你印象深刻的经历。",
+    goal: "练习时间顺序、细节和感受。",
+    task: "讲述一次经历并说明收获",
+    duration: "3 分钟",
+    mustSay: ["发生了什么", "你的感受", "你的收获"],
+    patterns: ["It happened when...", "At first...", "I learned that..."]
+  },
+  {
+    id: "plan",
+    category: "社交表达",
+    label: "计划安排",
+    title: "计划安排",
+    prompt: "请试着用英语说明一个近期计划。",
+    goal: "练习时间、目标、准备和确认安排。",
+    task: "说明一个计划并确认下一步",
+    duration: "3 分钟",
+    mustSay: ["计划内容", "时间安排", "下一步"],
+    patterns: ["I plan to...", "I am going to...", "The next step is..."]
+  },
+  {
+    id: "transport",
+    category: "旅行应急",
+    label: "交通",
+    title: "交通沟通",
+    prompt: "请试着用英语询问交通方式、票价和到达时间。",
+    goal: "练习交通问询、路线确认和时间表达。",
+    task: "完成一次交通方式确认",
+    duration: "3 分钟",
+    mustSay: ["目的地", "交通方式", "预计时间"],
+    patterns: ["Which bus should I take?", "How long does it take?", "How much is the ticket?"]
+  },
+  {
+    id: "emergency",
+    category: "旅行应急",
+    label: "紧急求助",
+    title: "紧急求助",
+    prompt: "请试着用英语说明你遇到的紧急情况并请求帮助。",
+    goal: "练习清楚描述问题、位置和需要的帮助。",
+    task: "说明紧急情况并请求帮助",
+    duration: "3 分钟",
+    mustSay: ["发生了什么", "你在哪里", "需要什么帮助"],
+    patterns: ["I need help.", "I am at...", "Could you call...?"]
+  },
+  {
+    id: "complaint",
+    category: "旅行应急",
+    label: "投诉沟通",
+    title: "投诉沟通",
+    prompt: "请试着用英语礼貌说明问题并提出解决请求。",
+    goal: "练习投诉描述、证据说明和解决方案请求。",
+    task: "礼貌投诉并请求解决方案",
+    duration: "3 分钟",
+    mustSay: ["问题是什么", "影响是什么", "希望如何解决"],
+    patterns: ["I would like to report a problem.", "This affected...", "Could you help resolve it?"]
   }
 ];
+
+const freeChatScenario = {
+  id: "free_chat",
+  mode: "freeChat",
+  category: "自由对话",
+  label: "自由对话",
+  title: "自由对话",
+  prompt: "自由对话",
+  goal: "想聊什么都可以，试着用英语自然表达。",
+  task: "想聊什么都可以，试着用英语自然表达。",
+  duration: "自由",
+  helper: "你可以聊今天的心情、学习、生活、旅行、兴趣，或者任何你想练习的话题。",
+  mustSay: ["尝试表达一个完整想法", "可以使用简单句", "不用担心语法错误"],
+  patterns: ["I want to talk about...", "Today I feel...", "Can we talk about...?", "I have a question about..."]
+};
+
+const scenarioGroups = [
+  { title: "基础生活", ids: ["daily_chat", "self_intro", "directions", "shopping", "restaurant", "hotel", "airport", "medical"] },
+  { title: "学习工作", ids: ["interview", "meeting", "report", "campus", "email", "project", "academic"] },
+  { title: "社交表达", ids: ["social", "hobby", "emotion", "opinion", "story", "plan"] },
+  { title: "旅行应急", ids: ["travel", "transport", "emergency", "complaint", "support"] }
+];
+
+const scenarioById = new Map(scenarios.map((scenario) => [scenario.id, scenario]));
 
 const growthModules = [
   { title: "学习", text: "每日开口", accent: "green" },
@@ -333,7 +592,9 @@ function WarmLanding({ onBegin, onComplete }) {
 function SpeakingApp({ active = true }) {
   const SpeechRecognition =
     typeof window !== "undefined" ? window.SpeechRecognition || window.webkitSpeechRecognition : null;
+  const [mode, setMode] = useState("scenario");
   const [scenario, setScenario] = useState(scenarios[0]);
+  const [activeCategory, setActiveCategory] = useState(scenarios[0].category);
   const [draft, setDraft] = useState("");
   const [turns, setTurns] = useState([]);
   const [expressionAssets, setExpressionAssets] = useState([]);
@@ -345,6 +606,7 @@ function SpeakingApp({ active = true }) {
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef(null);
   const practiceRef = useRef(null);
+  const activePractice = mode === "freeChat" ? freeChatScenario : scenario;
 
   useEffect(() => {
     try {
@@ -384,12 +646,12 @@ function SpeakingApp({ active = true }) {
     if (!answer) return;
 
     const turnId = createTurnId();
-    const localAnalysis = { ...analyzeSpeech(answer, scenario.id), source: "local", pending: true };
+    const localAnalysis = { ...analyzeSpeech(answer, activePractice.id, mode), source: "local", pending: true };
     setTurns((current) => [{ id: turnId, text: answer, analysis: localAnalysis }, ...current].slice(0, 6));
     setDraft("");
 
     try {
-      const aiFeedback = await requestAiFeedback({ answer, scenario, localAnalysis });
+      const aiFeedback = await requestAiFeedback({ answer, scenario: activePractice, mode, localAnalysis });
       const aiAnalysis = {
         ...localAnalysis,
         ...aiFeedback,
@@ -407,9 +669,9 @@ function SpeakingApp({ active = true }) {
         )
       );
       setExpressionAssets((current) =>
-        mergeExpressionAssets(current, createExpressionAssets({ answer, scenario, analysis: aiAnalysis }))
+        mergeExpressionAssets(current, createExpressionAssets({ answer, scenario: activePractice, analysis: aiAnalysis }))
       );
-      speakCoachLine(aiFeedback.nextQuestion || nextCoachLine(scenario.id, turns.length + 1));
+      speakCoachLine(extractSpeakableCoachLine(aiFeedback.nextQuestion || nextCoachLine(activePractice.id, turns.length + 1, mode)));
     } catch (error) {
       const fallbackAnalysis = {
         ...localAnalysis,
@@ -427,9 +689,9 @@ function SpeakingApp({ active = true }) {
         )
       );
       setExpressionAssets((current) =>
-        mergeExpressionAssets(current, createExpressionAssets({ answer, scenario, analysis: fallbackAnalysis }))
+        mergeExpressionAssets(current, createExpressionAssets({ answer, scenario: activePractice, analysis: fallbackAnalysis }))
       );
-      speakCoachLine(nextCoachLine(scenario.id, turns.length + 1));
+      speakCoachLine(nextCoachLine(activePractice.id, turns.length + 1, mode));
     }
   };
 
@@ -443,10 +705,10 @@ function SpeakingApp({ active = true }) {
     setScaffoldLoading(true);
     setScaffoldError("");
     try {
-      const result = await requestExpressionScaffold({ idea, scenario });
+      const result = await requestExpressionScaffold({ idea, scenario: activePractice, mode });
       setScaffold({ ...result.scaffold, source: "ai", model: result.model });
     } catch {
-      setScaffold(createLocalScaffold(idea, scenario));
+      setScaffold(createLocalScaffold(idea, activePractice));
       setScaffoldError("AI 脚手架暂时不可用，已提供本地开口模板。");
     } finally {
       setScaffoldLoading(false);
@@ -469,107 +731,119 @@ function SpeakingApp({ active = true }) {
         <span className="garden-piece garden-leaf piece-6"><i /></span>
       </div>
       <section className="growth-dashboard">
-        <div className="growth-main">
-          <header className="welcome-card soft-card">
-            <div className="welcome-copy">
-              <span className="page-pill">主页</span>
-              <h1>早安，梦想家 ☀️</h1>
-              <p>今天也来慢慢开口吧，稳定表达也是认真成长 🌱</p>
-            </div>
-            <span className="clay-brand-mark" aria-hidden="true">
-              <i />
-              <b />
-            </span>
-          </header>
-
-          <article className="daily-practice-card soft-card">
-            <div>
-              <span className="section-kicker">今日 3 分钟练习</span>
-              <h2>{scenario.task}</h2>
-              <p>{scenario.goal}</p>
-            </div>
-            <button type="button" onClick={startDailyPractice}>
-              开始练习
-            </button>
-          </article>
-
-          <div className="metric-row">
-            <article className="metric-card soft-card">
-              <strong>{turns.length || 5}</strong>
-              <span>次练习记录</span>
-            </article>
-            <article className="metric-card soft-card">
-              <strong>{turns[0]?.analysis?.overall || 78}%</strong>
-              <span>最近完成度</span>
-            </article>
+        <header className="workbench-top soft-card">
+          <div className="welcome-copy">
+            <span className="page-pill">练习工作台</span>
+            <h1>早安，梦想家 ☀️</h1>
+            <p>今天也来慢慢开口吧，稳定表达也是认真成长 🌱</p>
           </div>
-
-          <article className="affirmation-card soft-card">
-            <div>
-              <span className="section-kicker">今日肯定语</span>
-              <p>我会越来越自信地开口表达，也会温柔地接住每一次练习。</p>
-            </div>
-            <span className="tiny-sprout" aria-hidden="true" />
+          <article className="top-task-card">
+            <span className="section-kicker">今日任务</span>
+            <b>{activePractice.task}</b>
+            <p>{activePractice.goal}</p>
+            <button type="button" onClick={startDailyPractice}>开始练习</button>
           </article>
-
-          <article className="goal-card soft-card">
-            <div className="card-title-row">
-              <span className="section-kicker">最近目标</span>
-              <b>学习新技能 - 65%</b>
+          <aside className="top-support">
+            <div className="mini-metrics">
+              <span><b>{turns.length || 5}</b> 次练习</span>
+              <span><b>{turns[0]?.analysis?.overall || 78}%</b> 最近完成度</span>
             </div>
-            <div className="soft-progress" aria-hidden="true">
-              <span />
+            <div className="mini-affirmation">
+              <span className="tiny-sprout" aria-hidden="true" />
+              <p>我会越来越自信地开口表达。</p>
             </div>
-          </article>
+          </aside>
+        </header>
 
-          <section className="module-grid" aria-label="成长模块">
-            {growthModules.map((item) => (
-              <article key={item.title} className={`module-card soft-card accent-${item.accent}`}>
-                <span aria-hidden="true" />
-                <div>
-                  <b>{item.title}</b>
-                  <p>{item.text}</p>
-                </div>
-              </article>
-            ))}
-          </section>
-
-          <ExpressionAssets assets={expressionAssets} />
-        </div>
-
-        <aside className="practice-side">
-          <section className="scenario-card soft-card">
-            <div className="card-title-row">
-              <span className="section-kicker">练习场景</span>
-              <b>{scenario.title}</b>
-            </div>
-            <div className="scenario-tabs">
-              {scenarios.map((item) => (
+        <div className="workbench-grid">
+          <aside className="practice-nav">
+            <section className="scenario-card soft-card">
+              <div className="card-title-row">
+                <span className="section-kicker">练习模式</span>
+                <b>{mode === "freeChat" ? "自由对话" : "场景练习"}</b>
+              </div>
+              <div className="mode-toggle">
                 <button
-                  key={item.id}
-                  className={item.id === scenario.id ? "active" : ""}
+                  className={mode === "scenario" ? "active" : ""}
                   type="button"
-                  onClick={() => setScenario(item)}
+                  onClick={() => setMode("scenario")}
                 >
-                  <span className="scenario-dot" aria-hidden="true" />
-                  {item.label}
+                  场景练习
                 </button>
-              ))}
-            </div>
-          </section>
+                <button
+                  className={mode === "freeChat" ? "active" : ""}
+                  type="button"
+                  onClick={() => setMode("freeChat")}
+                >
+                  自由对话
+                </button>
+              </div>
+              <button
+                className={`free-chat-tab ${mode === "freeChat" ? "active" : ""}`}
+                type="button"
+                onClick={() => setMode("freeChat")}
+              >
+                <span className="scenario-dot" aria-hidden="true" />
+                自由对话
+              </button>
+            </section>
 
-          <section className="coach-panel dialogue-panel soft-card" ref={practiceRef}>
+            <section className="scenario-card soft-card">
+              <div className="card-title-row">
+                <span className="section-kicker">练习场景</span>
+                <b>{mode === "scenario" ? scenario.label : "可随时切换"}</b>
+              </div>
+              <div className="category-tabs">
+                {scenarioGroups.map((group) => (
+                  <button
+                    key={group.title}
+                    className={activeCategory === group.title ? "active" : ""}
+                    type="button"
+                    onClick={() => setActiveCategory(group.title)}
+                  >
+                    {group.title}
+                  </button>
+                ))}
+              </div>
+              <div className="scenario-tabs compact">
+                {(scenarioGroups.find((group) => group.title === activeCategory)?.ids || []).map((id) => {
+                  const item = scenarioById.get(id);
+                  if (!item) return null;
+                  return (
+                    <button
+                      key={item.id}
+                      className={mode === "scenario" && item.id === scenario.id ? "active" : ""}
+                      type="button"
+                      onClick={() => {
+                        setMode("scenario");
+                        setScenario(item);
+                        setActiveCategory(item.category);
+                      }}
+                    >
+                      <span className="scenario-dot" aria-hidden="true" />
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            <ExpressionAssets assets={expressionAssets} />
+          </aside>
+
+          <section className="practice-main">
+            <section className="coach-panel dialogue-panel soft-card" ref={practiceRef}>
             <div className="panel-heading">
               <span className="panel-icon panel-icon-dialogue" aria-hidden="true" />
-              <span>今日练习</span>
+              <span>{mode === "freeChat" ? "自由对话" : "今日练习"}</span>
             </div>
-            <h2>{scenario.prompt}</h2>
-            <p>{scenario.goal}</p>
+            <h2>{activePractice.prompt}</h2>
+            <p>{activePractice.helper || activePractice.goal}</p>
             <div className="task-helper-grid" aria-label="练习任务提示">
               <div>
-                <span className="section-kicker">必说 3 点</span>
+                <span className="section-kicker">{mode === "freeChat" ? "自由表达提示" : "必说 3 点"}</span>
                 <ul>
-                  {scenario.mustSay.map((item) => (
+                  {activePractice.mustSay.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
@@ -577,7 +851,7 @@ function SpeakingApp({ active = true }) {
               <div>
                 <span className="section-kicker">可用句型</span>
                 <ul>
-                  {scenario.patterns.map((item) => (
+                  {activePractice.patterns.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
@@ -596,7 +870,7 @@ function SpeakingApp({ active = true }) {
               <textarea
                 value={draft}
                 onChange={(event) => setDraft(event.target.value)}
-                placeholder="请在这里输入你的回答，或点击麦克风开始练习"
+                placeholder={mode === "freeChat" ? "请输入你想说的话，或点击麦克风开始自由对话" : "请在这里输入你的回答，或点击麦克风开始练习"}
               />
             </div>
             <div className="coach-actions">
@@ -614,18 +888,20 @@ function SpeakingApp({ active = true }) {
               <span>补充一个理由</span>
               <span>结尾自然停顿</span>
             </div>
-          </section>
+            </section>
 
-          <section className="coach-panel score-panel-next soft-card">
+            <section className="coach-panel score-panel-next soft-card">
             <div className="panel-heading">
               <span className="panel-icon panel-icon-score" aria-hidden="true" />
               <span>实时反馈</span>
             </div>
-            <ScoreDashboard latest={turns[0]?.analysis} />
-            <CorrectionList latest={turns[0]?.analysis} answer={turns[0]?.text} scenario={scenario} />
-            <SessionSummary latest={turns[0]?.analysis} scenario={scenario} />
+            <ScoreDashboard latest={turns[0]?.analysis} mode={mode} />
+            <FreeChatReply latest={turns[0]?.analysis} mode={mode} />
+            <CorrectionList latest={turns[0]?.analysis} answer={turns[0]?.text} scenario={activePractice} mode={mode} />
+            <SessionSummary latest={turns[0]?.analysis} scenario={activePractice} />
+            </section>
           </section>
-        </aside>
+        </div>
       </section>
     </main>
   );
@@ -639,7 +915,7 @@ function speakCoachLine(text) {
   window.speechSynthesis?.speak(utterance);
 }
 
-async function requestAiFeedback({ answer, scenario, localAnalysis }) {
+async function requestAiFeedback({ answer, scenario, mode, localAnalysis }) {
   const response = await fetch("/api/feedback", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -647,6 +923,7 @@ async function requestAiFeedback({ answer, scenario, localAnalysis }) {
       answer,
       scenario: {
         id: scenario.id,
+        mode,
         label: scenario.label,
         title: scenario.title,
         prompt: scenario.prompt,
@@ -669,7 +946,7 @@ async function requestAiFeedback({ answer, scenario, localAnalysis }) {
   };
 }
 
-async function requestExpressionScaffold({ idea, scenario }) {
+async function requestExpressionScaffold({ idea, scenario, mode }) {
   const response = await fetch("/api/scaffold", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -677,6 +954,7 @@ async function requestExpressionScaffold({ idea, scenario }) {
       idea,
       scenario: {
         id: scenario.id,
+        mode,
         label: scenario.label,
         title: scenario.title,
         prompt: scenario.prompt,
@@ -774,18 +1052,42 @@ function AssetItem({ label, asset, fallback }) {
   );
 }
 
-function ScoreDashboard({ latest }) {
+function ScoreDashboard({ latest, mode }) {
   const score = latest || { overall: "--", fluency: "--", grammar: "--", relevance: "--" };
   const progress = typeof score.overall === "number" ? `${score.overall * 3.6}deg` : "0deg";
+  const labels = mode === "freeChat"
+    ? [
+        ["流利度", score.fluency],
+        ["自然度", score.relevance],
+        ["语法", score.grammar],
+        ["表达清晰度", score.pronunciation || score.relevance]
+      ]
+    : [
+        ["流利度", score.fluency],
+        ["语法", score.grammar],
+        ["语境", score.relevance]
+      ];
   return (
     <div className="score-dashboard">
       <strong className="score-ring" style={{ "--score-progress": progress }}>{score.overall}</strong>
       <div>
-        <p>流利度 <span>{score.fluency}</span></p>
-        <p>语法 <span>{score.grammar}</span></p>
-        <p>语境 <span>{score.relevance}</span></p>
+        {labels.map(([label, value]) => (
+          <p key={label}>{label} <span>{value}</span></p>
+        ))}
       </div>
     </div>
+  );
+}
+
+function FreeChatReply({ latest, mode }) {
+  if (mode !== "freeChat" || !latest?.nextQuestion || latest.pending) return null;
+  const [english, chineseTip] = splitCoachReply(latest.nextQuestion);
+  return (
+    <article className="free-chat-reply">
+      <span className="section-kicker">AI 自然接话</span>
+      <p>{english}</p>
+      {chineseTip && <em>{chineseTip}</em>}
+    </article>
   );
 }
 
@@ -966,7 +1268,17 @@ function shortenText(text, maxLength) {
   return text.length > maxLength ? `${text.slice(0, maxLength - 1)}...` : text;
 }
 
-function analyzeSpeech(text, scenarioId) {
+function splitCoachReply(reply) {
+  if (!reply) return ["", ""];
+  const parts = reply.split(/中文提示[:：]/);
+  return [parts[0].trim(), parts[1]?.trim() || ""];
+}
+
+function extractSpeakableCoachLine(reply) {
+  return splitCoachReply(reply)[0] || reply;
+}
+
+function analyzeSpeech(text, scenarioId, mode = "scenario") {
   const wordsInAnswer = text.match(/[A-Za-z']+/g) || [];
   const lower = text.toLowerCase();
   const fillers = (lower.match(/\b(um|uh|like|you know|basically)\b/g) || []).length;
@@ -975,39 +1287,91 @@ function analyzeSpeech(text, scenarioId) {
   if (/\bdiscuss about\b/i.test(text)) corrections.push("表达 “讨论某事” 时，建议说 “discuss the topic”。");
   if (wordsInAnswer.length < 10) corrections.push("回答可以再补充一个理由和一个例子，会更完整。");
   if (!/[.!?]$/.test(text.trim())) corrections.push("结尾加上清晰的句号或停顿，会更像完整表达。");
-  const keywords = {
+  const keywords = mode === "freeChat" ? ["feel", "today", "think", "want", "like", "question", "talk", "share"] : ({
+    daily_chat: ["today", "feel", "share", "happened", "talk"],
+    self_intro: ["name", "work", "study", "hobby", "interest"],
+    directions: ["where", "go", "turn", "street", "station"],
+    shopping: ["price", "size", "color", "buy", "pay"],
     interview: ["project", "role", "impact", "team", "challenge"],
     restaurant: ["order", "recommend", "allergy", "drink", "confirm"],
     meeting: ["progress", "blocker", "timeline", "action", "owner"],
     travel: ["hotel", "check", "transport", "trip", "reservation"],
+    hotel: ["reservation", "check", "room", "quiet", "night"],
+    airport: ["flight", "gate", "bag", "boarding", "delay"],
+    medical: ["feel", "pain", "doctor", "medicine", "symptom"],
     campus: ["course", "class", "study", "assignment", "partner"],
+    report: ["progress", "finished", "issue", "next", "plan"],
+    email: ["email", "request", "deadline", "reply", "please"],
+    project: ["project", "task", "deadline", "risk", "team"],
+    academic: ["opinion", "reason", "research", "example", "study"],
     support: ["problem", "issue", "help", "solution", "confirm"],
-    social: ["name", "hobby", "interest", "meet", "share"]
-  }[scenarioId];
+    social: ["name", "hobby", "interest", "meet", "share"],
+    hobby: ["hobby", "enjoy", "like", "because", "time"],
+    emotion: ["feel", "happy", "tired", "sad", "because"],
+    opinion: ["think", "agree", "reason", "example", "view"],
+    story: ["happened", "first", "then", "learned", "experience"],
+    plan: ["plan", "going", "next", "time", "goal"],
+    transport: ["bus", "train", "ticket", "time", "take"],
+    emergency: ["help", "emergency", "lost", "call", "need"],
+    complaint: ["problem", "report", "resolve", "refund", "affected"]
+  }[scenarioId] || ["say", "think", "feel", "want", "need"]);
   const relevanceHits = keywords.filter((keyword) => lower.includes(keyword)).length;
   const fluency = clamp(86 - fillers * 7 + Math.min(wordsInAnswer.length, 35) * 0.25, 45, 98);
   const grammar = clamp(92 - corrections.length * 8, 42, 98);
-  const relevance = clamp(56 + relevanceHits * 12 + Math.min(wordsInAnswer.length, 24) * 0.5, 42, 98);
+  const relevance = mode === "freeChat"
+    ? clamp(64 + relevanceHits * 6 + Math.min(wordsInAnswer.length, 28) * 0.45, 48, 98)
+    : clamp(56 + relevanceHits * 12 + Math.min(wordsInAnswer.length, 24) * 0.5, 42, 98);
+  const pronunciation = clamp(62 + Math.min(wordsInAnswer.length, 30) * 0.8 - fillers * 4, 42, 98);
   return {
     fluency: Math.round(fluency),
     grammar: Math.round(grammar),
     relevance: Math.round(relevance),
-    overall: Math.round((fluency + grammar + relevance) / 3),
+    pronunciation: Math.round(pronunciation),
+    overall: Math.round((fluency + grammar + relevance + pronunciation) / 4),
     corrections
   };
 }
 
-function nextCoachLine(scenarioId, count) {
+function nextCoachLine(scenarioId, count, mode = "scenario") {
+  if (mode === "freeChat") {
+    const lines = [
+      "That sounds interesting. Can you tell me a little more about it?",
+      "I see. How did that make you feel?",
+      "That is a good topic to practice. What happened next?",
+      "Thanks for sharing that. What would you like to say about it next?"
+    ];
+    return lines[count % lines.length];
+  }
   const lines = {
+    daily_chat: ["What made today special?", "Could you add one small detail?", "How did you feel about it?"],
+    self_intro: ["Could you add one detail about your background?", "What hobby would you like to mention?", "How would you make it warmer?"],
+    directions: ["Could you confirm the route?", "How would you ask if it is far?", "Could you repeat the destination politely?"],
+    shopping: ["Could you ask about the size?", "How would you ask for the price?", "Could you confirm your purchase?"],
     interview: ["Could you make that more specific?", "What did you learn from that experience?", "How would you summarize your strengths?"],
     restaurant: ["Would you like to confirm the order?", "Do you have any dietary needs?", "Could you ask for a recommendation?"],
     meeting: ["What is the next action item?", "Who should own that task?", "How should the timeline change?"],
     travel: ["Could you ask about the check-in time?", "How would you confirm your reservation?", "Could you ask for directions politely?"],
+    hotel: ["Could you confirm your reservation?", "How would you ask for a quiet room?", "Could you ask about check-out time?"],
+    airport: ["Could you ask where the gate is?", "How would you ask about your baggage?", "Could you ask if the flight is delayed?"],
+    medical: ["Could you describe the symptom?", "How long have you felt this way?", "Could you ask what you should do next?"],
     campus: ["Could you explain your study plan?", "How would you ask a classmate for help?", "Could you share one opinion about the course?"],
+    report: ["Could you add one result?", "What is your next step?", "Could you explain one blocker?"],
+    email: ["Could you make the request clearer?", "What deadline should you mention?", "How would you make it polite?"],
+    project: ["Who should own that task?", "What is the timeline?", "Could you mention one risk?"],
+    academic: ["Could you add one reason?", "What example supports your point?", "How would you respond to another view?"],
     support: ["Could you describe the problem more clearly?", "What solution would you like to request?", "How would you confirm the next step?"],
-    social: ["Could you add one detail about your hobby?", "How would you ask a friendly follow-up question?", "Could you make the introduction warmer?"]
+    social: ["Could you add one detail about your hobby?", "How would you ask a friendly follow-up question?", "Could you make the introduction warmer?"],
+    hobby: ["Why do you enjoy it?", "When did you start this hobby?", "Could you ask the other person about their hobby?"],
+    emotion: ["What made you feel that way?", "What would help you feel better?", "Could you describe it with one more detail?"],
+    opinion: ["Could you add one reason?", "What example supports your opinion?", "How would you disagree politely?"],
+    story: ["What happened next?", "How did you feel at that moment?", "What did you learn from it?"],
+    plan: ["When will you start?", "What is the next step?", "Who will join you?"],
+    transport: ["How would you ask about the ticket price?", "Could you confirm the travel time?", "What transport do you prefer?"],
+    emergency: ["Could you say where you are?", "What help do you need first?", "Could you make the request clearer?"],
+    complaint: ["Could you explain the impact?", "What solution do you want?", "How would you keep it polite?"]
   };
-  return lines[scenarioId][count % lines[scenarioId].length];
+  const selectedLines = lines[scenarioId] || lines.daily_chat;
+  return selectedLines[count % selectedLines.length];
 }
 
 function clamp(value, min, max) {

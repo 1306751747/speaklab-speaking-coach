@@ -124,6 +124,26 @@ export async function POST(request) {
 }
 
 function buildFeedbackPrompt({ answer, scenario, localAnalysis }) {
+  if (scenario.mode === "freeChat") {
+    return [
+      "当前模式：自由对话",
+      "用户不是在完成固定任务，而是在和 AI 进行自然英语聊天。",
+      "反馈要轻，不要像作文批改。优先帮助用户继续开口。",
+      `本地规则初评分：${JSON.stringify(localAnalysis || {})}`,
+      "",
+      "用户英文输入：",
+      answer,
+      "",
+      "请完成：",
+      "1. 根据流利度、自然度、语法和表达清晰度给出 0-100 分。",
+      "2. corrections 最多给 1-2 条中文建议。如果用户说得很短，先鼓励多说一点，不要过度批改。",
+      "3. betterExpression 给出一版更自然的英文说法，保持用户原意。",
+      "4. nextQuestion 必须是自然聊天回复：2-4 句英文以内，可以包含一个 follow-up question。最后可追加一行“中文提示：...”，提示用户下一句可以说什么。",
+      "5. summary.strength、summary.rewrite、summary.nextFocus 用中文写，偏向口语表达和继续对话。",
+      "6. gentleCorrection 仍然采用温柔纠错结构，但不要频繁挑错；如果没有明显错误，original 可以写用户原句，suggestion 可以写更自然表达。"
+    ].join("\n");
+  }
+
   return [
     `练习场景：${scenario.label} / ${scenario.title}`,
     `中文任务：${scenario.prompt}`,
