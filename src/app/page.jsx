@@ -357,15 +357,50 @@ function SpeakingApp({ active = true }) {
     return () => recognition.abort?.();
   }, [SpeechRecognition, active]);
 
-  const submit = () => {
-    if (!draft.trim()) return;
-    const analysis = analyzeSpeech(draft, scenario.id);
-    setTurns((current) => [{ text: draft.trim(), analysis }, ...current].slice(0, 6));
+  const submit = async () => {
+    const answer = draft.trim();
+    if (!answer) return;
+
+    const turnId = createTurnId();
+    const localAnalysis = { ...analyzeSpeech(answer, scenario.id), source: "local", pending: true };
+    setTurns((current) => [{ id: turnId, text: answer, analysis: localAnalysis }, ...current].slice(0, 6));
     setDraft("");
-    const utterance = new SpeechSynthesisUtterance(nextCoachLine(scenario.id, turns.length + 1));
-    utterance.lang = "en-US";
-    utterance.rate = 0.93;
-    window.speechSynthesis?.speak(utterance);
+
+    try {
+      const aiFeedback = await requestAiFeedback({ answer, scenario, localAnalysis });
+      setTurns((current) =>
+        current.map((turn) =>
+          turn.id === turnId
+            ? {
+                ...turn,
+                analysis: {
+                  ...localAnalysis,
+                  ...aiFeedback,
+                  source: "ai",
+                  pending: false
+                }
+              }
+            : turn
+        )
+      );
+      speakCoachLine(aiFeedback.nextQuestion || nextCoachLine(scenario.id, turns.length + 1));
+    } catch (error) {
+      setTurns((current) =>
+        current.map((turn) =>
+          turn.id === turnId
+            ? {
+                ...turn,
+                analysis: {
+                  ...localAnalysis,
+                  pending: false,
+                  feedbackError: "AI 反馈暂时不可用，已保留本地规则反馈。"
+                }
+              }
+            : turn
+        )
+      );
+      speakCoachLine(nextCoachLine(scenario.id, turns.length + 1));
+    }
   };
 
   const startDailyPractice = () => {
@@ -526,6 +561,51 @@ function SpeakingApp({ active = true }) {
   );
 }
 
+function speakCoachLine(text) {
+  if (!text || typeof window === "undefined") return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "en-US";
+  utterance.rate = 0.93;
+  window.speechSynthesis?.speak(utterance);
+}
+
+async function requestAiFeedback({ answer, scenario, localAnalysis }) {
+  const response = await fetch("/api/feedback", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      answer,
+      scenario: {
+        id: scenario.id,
+        label: scenario.label,
+        title: scenario.title,
+        prompt: scenario.prompt,
+        goal: scenario.goal,
+        mustSay: scenario.mustSay,
+        patterns: scenario.patterns
+      },
+      localAnalysis
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("AI feedback request failed.");
+  }
+
+  const payload = await response.json();
+  return {
+    ...payload.feedback,
+    model: payload.model
+  };
+}
+
+function createTurnId() {
+  if (typeof window !== "undefined" && window.crypto?.randomUUID) {
+    return window.crypto.randomUUID();
+  }
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
 function ScoreDashboard({ latest }) {
   const score = latest || { overall: "--", fluency: "--", grammar: "--", relevance: "--" };
   const progress = typeof score.overall === "number" ? `${score.overall * 3.6}deg` : "0deg";
@@ -542,7 +622,9 @@ function ScoreDashboard({ latest }) {
 }
 
 function CorrectionList({ latest }) {
-  const items = latest
+  const items = latest?.pending
+    ? ["AI 正在结合场景任务生成更具体的纠错与表达建议。"]
+    : latest
     ? latest.corrections.length
       ? latest.corrections
       : ["这次表达比较完整，可以继续尝试加入更具体的例子。"]
@@ -552,6 +634,7 @@ function CorrectionList({ latest }) {
       {items.map((item, index) => (
         <p key={index}>{item}</p>
       ))}
+      {latest?.feedbackError && <p>{latest.feedbackError}</p>}
     </div>
   );
 }
@@ -562,6 +645,38 @@ function SessionSummary({ latest, scenario }) {
       <div className="session-summary">
         <span className="section-kicker">课后总结</span>
         <p>完成一次回答后，这里会生成你的表达亮点、推荐改写和下次重点。</p>
+      </div>
+    );
+  }
+
+  if (latest.pending) {
+    return (
+      <div className="session-summary">
+        <span className="section-kicker">AI 课后总结</span>
+        <p>正在生成表达亮点、自然改写和下一轮练习重点。</p>
+      </div>
+    );
+  }
+
+  if (latest.summary || latest.betterExpression) {
+    return (
+      <div className="session-summary">
+        <span className="section-kicker">{latest.source === "ai" ? "AI 课后总结" : "课后总结"}</span>
+        <div className="summary-grid">
+          <article>
+            <b>表达亮点</b>
+            <p>{latest.summary?.strength || "你已经完成了本轮表达，整体意思比较清楚。"}</p>
+          </article>
+          <article>
+            <b>推荐改写</b>
+            <p>{latest.betterExpression || latest.summary?.rewrite || scenario.patterns[0]}</p>
+          </article>
+          <article>
+            <b>下次重点</b>
+            <p>{latest.summary?.nextFocus || "下次可以加入更具体的例子，让表达更有画面感。"}</p>
+          </article>
+        </div>
+        {latest.model && <p className="feedback-source">由 {latest.model} 生成，已保留本地规则兜底。</p>}
       </div>
     );
   }

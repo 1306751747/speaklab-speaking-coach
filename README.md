@@ -9,7 +9,8 @@ SpeakLab is an AI English speaking practice platform with a warm cartoon clay "L
 - White English words floating slowly across the full page with soft appear, drift, and fade cycles.
 - Cursor-aligned frosted glass circle that uses the exact pointer coordinates and dissolves only nearby words.
 - Center glassmorphism card labeled `Start Communicating` with a soft magical transition into the speaking app.
-- English speaking coach with scenario selection, microphone input, speech synthesis, scoring, expression corrections, and live feedback.
+- English speaking coach with scenario selection, microphone input, speech synthesis, scoring, AI expression corrections, and live feedback.
+- Server-side AI feedback API for grammar correction, natural rewrites, next coach questions, and post-session summaries, with local rule feedback as a fallback.
 - Legacy static prototype remains available in `legacy-static/` for fallback demos.
 
 ## Product Analysis and Design Thinking
@@ -33,6 +34,26 @@ http://localhost:3000
 
 The microphone feature works best in Chrome or Edge with microphone permission enabled.
 
+## AI Feedback Configuration
+
+SpeakLab uses a server-side API route at `/api/feedback` to request structured AI feedback. The API key is read only on the server and is never exposed to the browser.
+
+Create `.env.local`:
+
+```bash
+OPENAI_API_KEY=your_api_key_here
+OPENAI_MODEL=gpt-4o-mini
+```
+
+`OPENAI_MODEL` is optional. The app defaults to `gpt-4o-mini` for a low-cost demo-friendly setup. You can switch it to another compatible OpenAI model if needed.
+
+Feedback flow:
+
+1. The browser first creates an instant local rule-based score.
+2. The app sends the answer, scenario, task requirements, and local score to `/api/feedback`.
+3. The server returns structured AI feedback: scores, corrections, natural rewrite, next coach question, and post-session summary.
+4. If the AI request fails or `OPENAI_API_KEY` is missing, the UI keeps the local rule feedback so the demo remains usable.
+
 Legacy static prototype:
 
 ```bash
@@ -48,6 +69,7 @@ Then open `http://localhost:8080`.
 - Framer Motion
 - CSS clay texture, plant shapes, floating word animations, and glassmorphism effects
 - Browser Web Speech API for speech recognition and synthesis
+- Server-side OpenAI-compatible Responses API call for structured AI feedback
 
 ## Original Work and Dependencies
 
