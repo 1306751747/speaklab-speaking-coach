@@ -11,15 +11,15 @@
   --muted: rgba(94, 67, 38, 0.68);
   --glass: rgba(255, 255, 255, 0.34);
   --line: rgba(255, 255, 255, 0.54);
-  --coach-clay: #f3dfd8;
-  --coach-clay-soft: #faeee9;
-  --coach-clay-deep: #d8b9ad;
-  --coach-accent: #9f6b58;
-  --coach-green: #8ca875;
-  --coach-rose: #c88f83;
-  --coach-cream: #fff8f2;
-  --coach-shadow: rgba(122, 82, 68, 0.18);
-  --coach-highlight: rgba(255, 255, 255, 0.72);
+  --coach-clay: rgba(248, 219, 151, 0.72);
+  --coach-clay-soft: rgba(255, 236, 190, 0.66);
+  --coach-clay-deep: #d5a75d;
+  --coach-accent: #8b5f35;
+  --coach-green: #7f9b5f;
+  --coach-rose: #c98f43;
+  --coach-cream: rgba(255, 245, 219, 0.76);
+  --coach-shadow: rgba(120, 76, 31, 0.2);
+  --coach-highlight: rgba(255, 246, 214, 0.72);
 }
 
 * {
@@ -1065,8 +1065,13 @@ button {
   overflow-y: auto;
   padding: clamp(18px, 3vw, 34px);
   background:
-    linear-gradient(145deg, #f7e9e5 0%, #f1ddd7 48%, #ead2c9 100%);
-  color: #5d4037;
+    radial-gradient(circle at 16% 12%, rgba(255, 236, 177, 0.34), transparent 28%),
+    radial-gradient(circle at 88% 20%, rgba(208, 151, 68, 0.16), transparent 32%),
+    radial-gradient(circle at 34% 86%, rgba(255, 244, 205, 0.22), transparent 34%),
+    linear-gradient(145deg, rgba(246, 219, 151, 0.92) 0%, rgba(240, 203, 124, 0.88) 46%, rgba(230, 178, 86, 0.76) 100%),
+    url("/assets/clay-plasticine-bg.png") center / cover no-repeat;
+  background-blend-mode: normal, normal, normal, normal, soft-light;
+  color: #5e4326;
   overscroll-behavior: contain;
 }
 
@@ -1082,12 +1087,163 @@ button {
   content: "";
   pointer-events: none;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.28), transparent 42%),
-    repeating-linear-gradient(90deg, rgba(122, 82, 68, 0.025) 0 1px, transparent 1px 19px);
-  opacity: 0.45;
+    radial-gradient(ellipse at 24% 22%, rgba(129, 78, 28, 0.08), transparent 18%),
+    radial-gradient(ellipse at 72% 64%, rgba(255, 244, 201, 0.18), transparent 22%),
+    radial-gradient(ellipse at 48% 42%, rgba(121, 75, 26, 0.055), transparent 24%),
+    repeating-radial-gradient(circle at 40% 30%, rgba(103, 66, 28, 0.025) 0 1px, transparent 1px 5px);
+  opacity: 0.78;
+  mix-blend-mode: multiply;
+}
+
+.app-garden-decor {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.garden-piece {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  opacity: 0.72;
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 232, 166, 0.18))
+    drop-shadow(0 4px 5px rgba(112, 70, 29, 0.16));
+}
+
+.garden-piece::before {
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  z-index: -1;
+  width: 28px;
+  height: 10px;
+  content: "";
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 58%, rgba(95, 57, 22, 0.18), transparent 64%);
+  filter: blur(1.2px);
+  transform: translateX(-50%);
+}
+
+.garden-flower i,
+.garden-flower b {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 28%, #fffdfa 0 25%, #fff1df 60%, #e8c7a9 100%);
+  box-shadow:
+    0 -7px 0 #fff9ed,
+    7px 0 0 #f5dfc6,
+    0 7px 0 #f8e6cf,
+    -7px 0 0 #efd0bc,
+    inset -1px -1px 2px rgba(144, 87, 43, 0.1),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.7);
+  transform: translate(-50%, -50%);
+}
+
+.garden-flower b {
+  width: 5px;
+  height: 5px;
+  background: radial-gradient(circle at 35% 30%, #f2c468, #d9903f 72%);
+  box-shadow: inset -1px -1px 1px rgba(122, 71, 25, 0.16);
+}
+
+.garden-sprout i,
+.garden-sprout b,
+.garden-grass i,
+.garden-grass b,
+.garden-grass em {
+  position: absolute;
+  bottom: 2px;
+  width: 12px;
+  height: 8px;
+  border-radius: 100% 20% 100% 20%;
+  background: linear-gradient(145deg, #8eb265, #5f873e);
+  box-shadow:
+    inset 2px 2px 4px rgba(224, 248, 188, 0.28),
+    inset -2px -2px 4px rgba(45, 72, 35, 0.2);
+}
+
+.garden-sprout i {
+  left: 4px;
+  transform: rotate(-35deg);
+}
+
+.garden-sprout b {
+  right: 4px;
+  transform: rotate(35deg) scaleX(-1);
+}
+
+.garden-leaf i {
+  position: absolute;
+  inset: 5px 2px 4px;
+  border-radius: 80% 20% 80% 20%;
+  background: linear-gradient(145deg, #91b566, #648d42);
+  box-shadow:
+    inset 3px 3px 5px rgba(224, 248, 188, 0.25),
+    inset -3px -3px 5px rgba(45, 72, 35, 0.18);
+  transform: rotate(-24deg);
+}
+
+.garden-grass i {
+  left: 2px;
+  transform: rotate(-48deg);
+}
+
+.garden-grass b {
+  left: 9px;
+  transform: rotate(-8deg);
+}
+
+.garden-grass em {
+  right: 1px;
+  transform: rotate(42deg) scaleX(-1);
+}
+
+.piece-1 {
+  left: 5%;
+  top: 14%;
+  transform: scale(0.9) rotate(-8deg);
+}
+
+.piece-2 {
+  right: 7%;
+  top: 11%;
+  transform: scale(0.95) rotate(10deg);
+}
+
+.piece-3 {
+  left: 3.5%;
+  bottom: 18%;
+  transform: scale(1.05) rotate(18deg);
+}
+
+.piece-4 {
+  right: 5.5%;
+  bottom: 12%;
+  transform: scale(0.82) rotate(14deg);
+}
+
+.piece-5 {
+  left: 50%;
+  bottom: 5%;
+  transform: scale(0.86) rotate(-6deg);
+}
+
+.piece-6 {
+  right: 29%;
+  top: 5%;
+  transform: scale(0.78) rotate(-20deg);
 }
 
 .growth-dashboard {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: minmax(320px, 0.92fr) minmax(420px, 1.08fr);
   gap: clamp(18px, 2.4vw, 28px);
@@ -1107,14 +1263,17 @@ button {
 .soft-card,
 .coach-panel,
 .scenario-card {
-  border: 1px solid rgba(255, 255, 255, 0.46);
-  border-radius: 30px;
-  background: var(--coach-clay);
+  border: 1px solid rgba(255, 248, 224, 0.62);
+  border-radius: 32px;
+  background:
+    linear-gradient(145deg, rgba(255, 242, 205, 0.56), rgba(239, 199, 111, 0.2)),
+    var(--coach-clay);
+  backdrop-filter: blur(18px) saturate(1.08);
   box-shadow:
-    -10px -10px 24px var(--coach-highlight),
-    12px 14px 28px var(--coach-shadow),
-    inset 1px 1px 2px rgba(255, 255, 255, 0.38),
-    inset -3px -4px 8px rgba(148, 95, 80, 0.08);
+    -10px -10px 24px rgba(255, 241, 196, 0.5),
+    13px 15px 30px var(--coach-shadow),
+    inset 1px 1px 2px rgba(255, 250, 230, 0.48),
+    inset -4px -5px 10px rgba(137, 87, 31, 0.08);
 }
 
 .welcome-card {
@@ -1136,25 +1295,25 @@ button {
   min-height: 30px;
   padding: 0 14px;
   border-radius: 999px;
-  color: #6c5046;
+  color: #7c552f;
   background: var(--coach-clay-soft);
   box-shadow:
-    inset 3px 3px 7px rgba(153, 99, 83, 0.08),
-    inset -3px -3px 7px rgba(255, 255, 255, 0.55);
+    inset 3px 3px 7px rgba(121, 75, 26, 0.08),
+    inset -3px -3px 7px rgba(255, 245, 213, 0.56);
   font-size: 13px;
   font-weight: 700;
 }
 
 .welcome-card h1 {
   margin: 22px 0 10px;
-  color: #4e3b31;
+  color: #5e4326;
   font-size: clamp(34px, 4vw, 50px);
   line-height: 1.08;
 }
 
 .welcome-card p {
   margin: 0;
-  color: rgba(93, 64, 55, 0.72);
+  color: rgba(94, 67, 38, 0.72);
   font-size: 16px;
   line-height: 1.7;
 }
@@ -1162,10 +1321,10 @@ button {
 .clay-brand-mark {
   background: var(--coach-clay-soft);
   box-shadow:
-    -7px -7px 16px rgba(255, 255, 255, 0.66),
-    8px 10px 18px rgba(122, 82, 68, 0.16),
-    inset 1px 1px 2px rgba(255, 255, 255, 0.52),
-    inset -4px -4px 8px rgba(148, 95, 80, 0.1);
+    -7px -7px 16px rgba(255, 241, 196, 0.62),
+    8px 10px 18px rgba(120, 76, 31, 0.17),
+    inset 1px 1px 2px rgba(255, 250, 230, 0.52),
+    inset -4px -4px 8px rgba(137, 87, 31, 0.1);
 }
 
 .metric-row {
@@ -1184,14 +1343,14 @@ button {
 
 .daily-practice-card h2 {
   margin: 12px 0 8px;
-  color: #4e3b31;
+  color: #5e4326;
   font-size: clamp(24px, 3vw, 34px);
   line-height: 1.18;
 }
 
 .daily-practice-card p {
   margin: 0;
-  color: rgba(93, 64, 55, 0.66);
+  color: rgba(94, 67, 38, 0.66);
   line-height: 1.7;
 }
 
@@ -1201,18 +1360,18 @@ button {
   flex: 0 0 auto;
   border: 0;
   border-radius: 999px;
-  color: #5d4037;
+  color: #5e4326;
   background: var(--coach-clay-soft);
   font-weight: 800;
   box-shadow:
-    -5px -5px 11px rgba(255, 255, 255, 0.58),
-    6px 7px 13px rgba(122, 82, 68, 0.14);
+    -5px -5px 11px rgba(255, 241, 196, 0.56),
+    6px 7px 13px rgba(120, 76, 31, 0.14);
 }
 
 .daily-practice-card button:active {
   box-shadow:
-    inset 5px 5px 10px rgba(122, 82, 68, 0.12),
-    inset -5px -5px 10px rgba(255, 255, 255, 0.54);
+    inset 5px 5px 10px rgba(120, 76, 31, 0.13),
+    inset -5px -5px 10px rgba(255, 241, 196, 0.54);
 }
 
 .metric-card {
@@ -1224,7 +1383,7 @@ button {
 .metric-card strong {
   display: block;
   margin-bottom: 12px;
-  color: #5b4037;
+  color: #5e4326;
   font-size: 28px;
   line-height: 1;
 }
@@ -1232,7 +1391,7 @@ button {
 .metric-card span,
 .section-kicker,
 .panel-heading > span:last-child {
-  color: rgba(93, 64, 55, 0.68);
+  color: rgba(94, 67, 38, 0.68);
   font-size: 14px;
   font-weight: 700;
 }
@@ -1252,7 +1411,7 @@ button {
 
 .affirmation-card p {
   margin: 14px 0 0;
-  color: #7c5a50;
+  color: #7b552f;
   font-size: clamp(22px, 2.4vw, 31px);
   line-height: 1.6;
 }
@@ -1263,11 +1422,11 @@ button {
   height: 52px;
   flex: 0 0 auto;
   border-radius: 20px;
-  background: #f4caa8;
+  background: #f1c772;
   box-shadow:
-    inset 5px 5px 9px rgba(255, 246, 236, 0.42),
-    inset -5px -5px 9px rgba(162, 98, 74, 0.14),
-    0 10px 18px rgba(122, 82, 68, 0.14);
+    inset 5px 5px 9px rgba(255, 245, 205, 0.42),
+    inset -5px -5px 9px rgba(154, 95, 31, 0.14),
+    0 10px 18px rgba(120, 76, 31, 0.15);
 }
 
 .tiny-sprout::before,
@@ -1302,7 +1461,7 @@ button {
 }
 
 .card-title-row b {
-  color: #5d4037;
+  color: #5e4326;
   font-size: 15px;
 }
 
@@ -1311,10 +1470,10 @@ button {
   margin-top: 17px;
   overflow: hidden;
   border-radius: 999px;
-  background: #ead4cc;
+  background: rgba(205, 151, 67, 0.26);
   box-shadow:
-    inset 5px 5px 9px rgba(122, 82, 68, 0.12),
-    inset -5px -5px 9px rgba(255, 255, 255, 0.46);
+    inset 5px 5px 9px rgba(120, 76, 31, 0.12),
+    inset -5px -5px 9px rgba(255, 242, 202, 0.46);
 }
 
 .soft-progress span {
@@ -1322,8 +1481,8 @@ button {
   width: 65%;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #9f6b58, #c88f83);
-  box-shadow: 0 2px 6px rgba(122, 82, 68, 0.18);
+  background: linear-gradient(90deg, #8b5f35, #c98f43);
+  box-shadow: 0 2px 6px rgba(120, 76, 31, 0.18);
 }
 
 .module-grid {
@@ -1347,11 +1506,11 @@ button {
   height: 42px;
   flex: 0 0 auto;
   border-radius: 15px;
-  background: #c88f83;
+  background: #c98f43;
   box-shadow:
-    inset 4px 4px 8px rgba(255, 237, 229, 0.34),
-    inset -5px -5px 9px rgba(115, 69, 57, 0.16),
-    0 8px 13px rgba(122, 82, 68, 0.13);
+    inset 4px 4px 8px rgba(255, 238, 181, 0.34),
+    inset -5px -5px 9px rgba(108, 66, 26, 0.16),
+    0 8px 13px rgba(120, 76, 31, 0.13);
 }
 
 .module-card > span::after {
@@ -1359,7 +1518,7 @@ button {
   inset: 12px;
   content: "";
   border-radius: 50%;
-  background: rgba(255, 248, 242, 0.78);
+  background: rgba(255, 247, 221, 0.78);
 }
 
 .module-card b,
@@ -1369,13 +1528,13 @@ button {
 }
 
 .module-card b {
-  color: #5d4037;
+  color: #5e4326;
   font-size: 16px;
 }
 
 .module-card p {
   margin-top: 5px;
-  color: rgba(93, 64, 55, 0.58);
+  color: rgba(94, 67, 38, 0.58);
   font-size: 13px;
 }
 
@@ -1386,11 +1545,11 @@ button {
 }
 
 .module-card.accent-sand > span {
-  background: #d8b186;
+  background: #d9ad61;
 }
 
 .module-card.accent-brown > span {
-  background: #9f6b58;
+  background: #8b5f35;
 }
 
 .scenario-card {
@@ -1404,16 +1563,16 @@ button {
   gap: 10px;
   padding: 8px;
   border-radius: 24px;
-  background: #ead4cc;
+  background: rgba(207, 153, 65, 0.2);
   box-shadow:
-    inset 5px 5px 10px rgba(122, 82, 68, 0.1),
-    inset -5px -5px 10px rgba(255, 255, 255, 0.5);
+    inset 5px 5px 10px rgba(120, 76, 31, 0.1),
+    inset -5px -5px 10px rgba(255, 242, 202, 0.5);
 }
 
 .scenario-tabs button,
 .coach-actions button {
   border: 0;
-  color: #5d4037;
+  color: #5e4326;
   background: var(--coach-clay);
 }
 
@@ -1422,19 +1581,19 @@ button {
   padding: 0 16px;
   border-radius: 999px;
   box-shadow:
-    -4px -4px 9px rgba(255, 255, 255, 0.56),
-    5px 6px 11px rgba(122, 82, 68, 0.12);
+    -4px -4px 9px rgba(255, 241, 196, 0.56),
+    5px 6px 11px rgba(120, 76, 31, 0.12);
 }
 
 .scenario-tabs button.active {
   background: var(--coach-clay-soft);
   box-shadow:
-    inset 4px 4px 8px rgba(122, 82, 68, 0.12),
-    inset -4px -4px 8px rgba(255, 255, 255, 0.58);
+    inset 4px 4px 8px rgba(120, 76, 31, 0.13),
+    inset -4px -4px 8px rgba(255, 241, 196, 0.58);
 }
 
 .scenario-dot {
-  background: #9f6b58;
+  background: #8b5f35;
 }
 
 .coach-panel {
@@ -1444,14 +1603,14 @@ button {
 
 .dialogue-panel h2 {
   margin: 18px 0 10px;
-  color: #4e3b31;
+  color: #5e4326;
   font-size: clamp(25px, 3vw, 34px);
   line-height: 1.28;
 }
 
 .dialogue-panel p {
   margin: 0 0 20px;
-  color: rgba(93, 64, 55, 0.66);
+  color: rgba(94, 67, 38, 0.66);
   line-height: 1.7;
 }
 
@@ -1468,8 +1627,8 @@ button {
   border-radius: 20px;
   background: var(--coach-clay-soft);
   box-shadow:
-    inset 3px 3px 7px rgba(122, 82, 68, 0.08),
-    inset -3px -3px 7px rgba(255, 255, 255, 0.55);
+    inset 3px 3px 7px rgba(120, 76, 31, 0.08),
+    inset -3px -3px 7px rgba(255, 242, 202, 0.55);
 }
 
 .task-helper-grid ul {
@@ -1483,7 +1642,7 @@ button {
 .task-helper-grid li {
   position: relative;
   padding-left: 16px;
-  color: rgba(93, 64, 55, 0.76);
+  color: rgba(94, 67, 38, 0.76);
   line-height: 1.45;
 }
 
@@ -1515,15 +1674,16 @@ button {
 .clay-input-shell {
   border-radius: 24px;
   padding: 10px;
-  background: #ead4cc;
+  background: rgba(207, 153, 65, 0.22);
   box-shadow:
-    inset 8px 8px 16px rgba(122, 82, 68, 0.12),
-    inset -8px -8px 16px rgba(255, 255, 255, 0.52);
+    inset 8px 8px 16px rgba(120, 76, 31, 0.14),
+    inset -8px -8px 16px rgba(255, 242, 202, 0.5);
 }
 
 .clay-input-shell textarea {
   min-height: 150px;
   font-size: 15px;
+  color: #5e4326;
 }
 
 .coach-actions {
@@ -1539,14 +1699,14 @@ button {
   border-radius: 999px;
   font-weight: 800;
   box-shadow:
-    -5px -5px 11px rgba(255, 255, 255, 0.58),
-    6px 7px 13px rgba(122, 82, 68, 0.14);
+    -5px -5px 11px rgba(255, 241, 196, 0.58),
+    6px 7px 13px rgba(120, 76, 31, 0.14);
 }
 
 .coach-actions button:active:not(:disabled) {
   box-shadow:
-    inset 5px 5px 10px rgba(122, 82, 68, 0.12),
-    inset -5px -5px 10px rgba(255, 255, 255, 0.54);
+    inset 5px 5px 10px rgba(120, 76, 31, 0.13),
+    inset -5px -5px 10px rgba(255, 241, 196, 0.54);
 }
 
 .clay-session-strip {
@@ -1559,8 +1719,8 @@ button {
 .clay-session-strip span {
   background: var(--coach-clay-soft);
   box-shadow:
-    inset 3px 3px 7px rgba(122, 82, 68, 0.08),
-    inset -3px -3px 7px rgba(255, 255, 255, 0.55);
+    inset 3px 3px 7px rgba(120, 76, 31, 0.08),
+    inset -3px -3px 7px rgba(255, 242, 202, 0.55);
 }
 
 .score-panel-next {
@@ -1579,12 +1739,12 @@ button {
   height: 128px;
   background:
     radial-gradient(circle at 50% 50%, var(--coach-clay) 0 54%, transparent 55%),
-    conic-gradient(var(--coach-rose) 0 var(--score-progress), #ead4cc var(--score-progress) 360deg);
+    conic-gradient(var(--coach-rose) 0 var(--score-progress), rgba(205, 151, 67, 0.28) var(--score-progress) 360deg);
   box-shadow:
-    -7px -7px 16px rgba(255, 255, 255, 0.56),
-    8px 10px 18px rgba(122, 82, 68, 0.15),
-    inset 3px 3px 7px rgba(255, 255, 255, 0.42),
-    inset -4px -4px 8px rgba(148, 95, 80, 0.1);
+    -7px -7px 16px rgba(255, 241, 196, 0.56),
+    8px 10px 18px rgba(120, 76, 31, 0.15),
+    inset 3px 3px 7px rgba(255, 250, 230, 0.42),
+    inset -4px -4px 8px rgba(137, 87, 31, 0.1);
   font-size: 42px;
 }
 
@@ -1596,8 +1756,8 @@ button {
 .score-dashboard p {
   margin: 0 0 10px;
   box-shadow:
-    inset 3px 3px 7px rgba(122, 82, 68, 0.08),
-    inset -3px -3px 7px rgba(255, 255, 255, 0.56);
+    inset 3px 3px 7px rgba(120, 76, 31, 0.08),
+    inset -3px -3px 7px rgba(255, 242, 202, 0.56);
 }
 
 .correction-stack {
@@ -1607,9 +1767,9 @@ button {
 
 .correction-stack p {
   box-shadow:
-    -4px -4px 9px rgba(255, 255, 255, 0.52),
-    5px 6px 12px rgba(122, 82, 68, 0.12),
-    inset 5px 0 0 rgba(200, 143, 131, 0.72);
+    -4px -4px 9px rgba(255, 241, 196, 0.52),
+    5px 6px 12px rgba(120, 76, 31, 0.12),
+    inset 5px 0 0 rgba(201, 143, 67, 0.72);
 }
 
 .session-summary {
@@ -1619,13 +1779,13 @@ button {
   border-radius: 22px;
   background: var(--coach-clay);
   box-shadow:
-    inset 4px 4px 9px rgba(122, 82, 68, 0.08),
-    inset -4px -4px 9px rgba(255, 255, 255, 0.5);
+    inset 4px 4px 9px rgba(120, 76, 31, 0.08),
+    inset -4px -4px 9px rgba(255, 242, 202, 0.5);
 }
 
 .session-summary > p {
   margin: 0;
-  color: rgba(93, 64, 55, 0.66);
+  color: rgba(94, 67, 38, 0.66);
   line-height: 1.65;
 }
 
@@ -1639,8 +1799,8 @@ button {
   border-radius: 18px;
   background: var(--coach-clay-soft);
   box-shadow:
-    -3px -3px 7px rgba(255, 255, 255, 0.48),
-    4px 5px 10px rgba(122, 82, 68, 0.1);
+    -3px -3px 7px rgba(255, 241, 196, 0.48),
+    4px 5px 10px rgba(120, 76, 31, 0.1);
 }
 
 .summary-grid b,
@@ -1650,13 +1810,20 @@ button {
 }
 
 .summary-grid b {
-  color: #5d4037;
+  color: #5e4326;
 }
 
 .summary-grid p {
   margin-top: 7px;
-  color: rgba(93, 64, 55, 0.68);
+  color: rgba(94, 67, 38, 0.68);
   line-height: 1.55;
+}
+
+.feedback-source {
+  margin: 0;
+  color: rgba(94, 67, 38, 0.48);
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 @media (max-width: 980px) {
