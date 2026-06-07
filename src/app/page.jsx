@@ -409,6 +409,14 @@ function SpeakingApp({ active = true }) {
 
   return (
     <main className="app-shell">
+      <div className="app-garden-decor" aria-hidden="true">
+        <span className="garden-piece garden-flower piece-1"><i /><b /></span>
+        <span className="garden-piece garden-sprout piece-2"><i /><b /></span>
+        <span className="garden-piece garden-leaf piece-3"><i /></span>
+        <span className="garden-piece garden-flower piece-4"><i /><b /></span>
+        <span className="garden-piece garden-grass piece-5"><i /><b /><em /></span>
+        <span className="garden-piece garden-leaf piece-6"><i /></span>
+      </div>
       <section className="growth-dashboard">
         <div className="growth-main">
           <header className="welcome-card soft-card">
