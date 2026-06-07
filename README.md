@@ -11,6 +11,9 @@ SpeakLab is an AI English speaking practice platform with a warm cartoon clay "L
 - Center glassmorphism card labeled `Start Communicating` with a soft magical transition into the speaking app.
 - English speaking coach with scenario selection, microphone input, speech synthesis, scoring, AI expression corrections, and live feedback.
 - Server-side AI feedback API for grammar correction, natural rewrites, next coach questions, and post-session summaries, with local rule feedback as a fallback.
+- Gentle correction mode that explains one key issue with praise, original text, suggested expression, and reason.
+- Chinese "I want to express..." scaffold that generates simple, natural, and formal English versions for Chinese learners.
+- Expression asset library that keeps recommended rewrites, common mistakes, and high-score patterns in local storage.
 - Legacy static prototype remains available in `legacy-static/` for fallback demos.
 
 ## Product Analysis and Design Thinking
@@ -36,7 +39,7 @@ The microphone feature works best in Chrome or Edge with microphone permission e
 
 ## AI Feedback Configuration
 
-SpeakLab uses a server-side API route at `/api/feedback` to request structured AI feedback. The API key is read only on the server and is never exposed to the browser.
+SpeakLab uses server-side API routes at `/api/feedback` and `/api/scaffold` to request structured AI feedback. The API key is read only on the server and is never exposed to the browser.
 
 Create `.env.local`:
 
@@ -51,8 +54,9 @@ Feedback flow:
 
 1. The browser first creates an instant local rule-based score.
 2. The app sends the answer, scenario, task requirements, and local score to `/api/feedback`.
-3. The server returns structured AI feedback: scores, corrections, natural rewrite, next coach question, and post-session summary.
-4. If the AI request fails or `OPENAI_API_KEY` is missing, the UI keeps the local rule feedback so the demo remains usable.
+3. The server returns structured AI feedback: scores, gentle correction, natural rewrite, next coach question, and post-session summary.
+4. The Chinese scaffold can turn a user's Chinese idea into simple, natural, and formal English expressions.
+5. If the AI request fails or `OPENAI_API_KEY` is missing, the UI keeps the local rule feedback and local scaffold templates so the demo remains usable.
 
 Legacy static prototype:
 
