@@ -336,9 +336,31 @@ function SpeakingApp({ active = true }) {
   const [scenario, setScenario] = useState(scenarios[0]);
   const [draft, setDraft] = useState("");
   const [turns, setTurns] = useState([]);
+  const [expressionAssets, setExpressionAssets] = useState([]);
+  const [assetsReady, setAssetsReady] = useState(false);
+  const [chineseIdea, setChineseIdea] = useState("");
+  const [scaffold, setScaffold] = useState(null);
+  const [scaffoldLoading, setScaffoldLoading] = useState(false);
+  const [scaffoldError, setScaffoldError] = useState("");
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef(null);
   const practiceRef = useRef(null);
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem("speaklab-expression-assets");
+      if (stored) setExpressionAssets(JSON.parse(stored));
+    } catch {
+      setExpressionAssets([]);
+    } finally {
+      setAssetsReady(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!assetsReady) return;
+    window.localStorage.setItem("speaklab-expression-assets", JSON.stringify(expressionAssets.slice(0, 12)));
+  }, [assetsReady, expressionAssets]);
 
   useEffect(() => {
     if (!active) return undefined;
@@ -368,36 +390,44 @@ function SpeakingApp({ active = true }) {
 
     try {
       const aiFeedback = await requestAiFeedback({ answer, scenario, localAnalysis });
+      const aiAnalysis = {
+        ...localAnalysis,
+        ...aiFeedback,
+        source: "ai",
+        pending: false
+      };
       setTurns((current) =>
         current.map((turn) =>
           turn.id === turnId
             ? {
                 ...turn,
-                analysis: {
-                  ...localAnalysis,
-                  ...aiFeedback,
-                  source: "ai",
-                  pending: false
-                }
+                analysis: aiAnalysis
               }
             : turn
         )
       );
+      setExpressionAssets((current) =>
+        mergeExpressionAssets(current, createExpressionAssets({ answer, scenario, analysis: aiAnalysis }))
+      );
       speakCoachLine(aiFeedback.nextQuestion || nextCoachLine(scenario.id, turns.length + 1));
     } catch (error) {
+      const fallbackAnalysis = {
+        ...localAnalysis,
+        pending: false,
+        feedbackError: "AI 反馈暂时不可用，已保留本地规则反馈。"
+      };
       setTurns((current) =>
         current.map((turn) =>
           turn.id === turnId
             ? {
                 ...turn,
-                analysis: {
-                  ...localAnalysis,
-                  pending: false,
-                  feedbackError: "AI 反馈暂时不可用，已保留本地规则反馈。"
-                }
+                analysis: fallbackAnalysis
               }
             : turn
         )
+      );
+      setExpressionAssets((current) =>
+        mergeExpressionAssets(current, createExpressionAssets({ answer, scenario, analysis: fallbackAnalysis }))
       );
       speakCoachLine(nextCoachLine(scenario.id, turns.length + 1));
     }
@@ -405,6 +435,27 @@ function SpeakingApp({ active = true }) {
 
   const startDailyPractice = () => {
     practiceRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const generateScaffold = async () => {
+    const idea = chineseIdea.trim();
+    if (!idea) return;
+    setScaffoldLoading(true);
+    setScaffoldError("");
+    try {
+      const result = await requestExpressionScaffold({ idea, scenario });
+      setScaffold({ ...result.scaffold, source: "ai", model: result.model });
+    } catch {
+      setScaffold(createLocalScaffold(idea, scenario));
+      setScaffoldError("AI 脚手架暂时不可用，已提供本地开口模板。");
+    } finally {
+      setScaffoldLoading(false);
+    }
+  };
+
+  const useScaffoldLine = (line) => {
+    setDraft(line);
+    practiceRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   return (
@@ -482,6 +533,8 @@ function SpeakingApp({ active = true }) {
               </article>
             ))}
           </section>
+
+          <ExpressionAssets assets={expressionAssets} />
         </div>
 
         <aside className="practice-side">
@@ -530,6 +583,15 @@ function SpeakingApp({ active = true }) {
                 </ul>
               </div>
             </div>
+            <ChineseScaffold
+              idea={chineseIdea}
+              scaffold={scaffold}
+              loading={scaffoldLoading}
+              error={scaffoldError}
+              onIdeaChange={setChineseIdea}
+              onGenerate={generateScaffold}
+              onUseLine={useScaffoldLine}
+            />
             <div className="clay-input-shell">
               <textarea
                 value={draft}
@@ -560,7 +622,7 @@ function SpeakingApp({ active = true }) {
               <span>实时反馈</span>
             </div>
             <ScoreDashboard latest={turns[0]?.analysis} />
-            <CorrectionList latest={turns[0]?.analysis} />
+            <CorrectionList latest={turns[0]?.analysis} answer={turns[0]?.text} scenario={scenario} />
             <SessionSummary latest={turns[0]?.analysis} scenario={scenario} />
           </section>
         </aside>
@@ -607,11 +669,109 @@ async function requestAiFeedback({ answer, scenario, localAnalysis }) {
   };
 }
 
+async function requestExpressionScaffold({ idea, scenario }) {
+  const response = await fetch("/api/scaffold", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      idea,
+      scenario: {
+        id: scenario.id,
+        label: scenario.label,
+        title: scenario.title,
+        prompt: scenario.prompt,
+        goal: scenario.goal,
+        patterns: scenario.patterns
+      }
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("Expression scaffold request failed.");
+  }
+
+  return response.json();
+}
+
 function createTurnId() {
   if (typeof window !== "undefined" && window.crypto?.randomUUID) {
     return window.crypto.randomUUID();
   }
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function ChineseScaffold({ idea, scaffold, loading, error, onIdeaChange, onGenerate, onUseLine }) {
+  return (
+    <section className="scaffold-card" aria-label="中文表达脚手架">
+      <div className="card-title-row">
+        <span className="section-kicker">我想表达...</span>
+        <b>中文脚手架</b>
+      </div>
+      <div className="scaffold-input-row">
+        <textarea
+          value={idea}
+          onChange={(event) => onIdeaChange(event.target.value)}
+          placeholder="先用中文写下你想表达的意思，例如：我想说自己负责了项目排期，也解决了一个沟通问题。"
+        />
+        <button type="button" onClick={onGenerate} disabled={loading || !idea.trim()}>
+          {loading ? "生成中" : "生成英文表达"}
+        </button>
+      </div>
+      {error && <p className="scaffold-note">{error}</p>}
+      {scaffold && (
+        <div className="scaffold-options">
+          <ScaffoldOption label="简单版" text={scaffold.simple} onUseLine={onUseLine} />
+          <ScaffoldOption label="自然版" text={scaffold.natural} onUseLine={onUseLine} />
+          <ScaffoldOption label="正式版" text={scaffold.formal} onUseLine={onUseLine} />
+          {scaffold.practiceTip && <p className="scaffold-note">{scaffold.practiceTip}</p>}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function ScaffoldOption({ label, text, onUseLine }) {
+  if (!text) return null;
+  return (
+    <article className="scaffold-option">
+      <span>{label}</span>
+      <p>{text}</p>
+      <button type="button" onClick={() => onUseLine(text)}>
+        放入回答
+      </button>
+    </article>
+  );
+}
+
+function ExpressionAssets({ assets }) {
+  const weeklyCount = assets.filter((asset) => Date.now() - asset.createdAt < 7 * 24 * 60 * 60 * 1000).length;
+  const rewrite = assets.find((asset) => asset.type === "rewrite");
+  const mistake = assets.find((asset) => asset.type === "mistake");
+  const pattern = assets.find((asset) => asset.type === "pattern");
+
+  return (
+    <article className="asset-card soft-card">
+      <div className="card-title-row">
+        <span className="section-kicker">表达资产库</span>
+        <b>本周新增 {weeklyCount} 条</b>
+      </div>
+      <div className="asset-list">
+        <AssetItem label="推荐改写" asset={rewrite} fallback="完成一次练习后，会保存你的推荐改写。" />
+        <AssetItem label="常错表达" asset={mistake} fallback="这里会沉淀最值得复习的表达问题。" />
+        <AssetItem label="高分句型" asset={pattern} fallback="高分回答会自动保存可复用句型。" />
+      </div>
+    </article>
+  );
+}
+
+function AssetItem({ label, asset, fallback }) {
+  return (
+    <section className="asset-item">
+      <span>{label}</span>
+      <p>{asset?.text || fallback}</p>
+      {asset?.note && <em>{asset.note}</em>}
+    </section>
+  );
 }
 
 function ScoreDashboard({ latest }) {
@@ -629,19 +789,45 @@ function ScoreDashboard({ latest }) {
   );
 }
 
-function CorrectionList({ latest }) {
-  const items = latest?.pending
-    ? ["AI 正在结合场景任务生成更具体的纠错与表达建议。"]
-    : latest
-    ? latest.corrections.length
-      ? latest.corrections
-      : ["这次表达比较完整，可以继续尝试加入更具体的例子。"]
-    : ["完成一次回答后，这里会显示表达建议。"];
+function CorrectionList({ latest, answer, scenario }) {
+  if (latest?.pending) {
+    return (
+      <div className="correction-stack">
+        <p>AI 正在结合场景任务生成更具体的纠错与表达建议。</p>
+      </div>
+    );
+  }
+
+  if (!latest) {
+    return (
+      <div className="correction-stack">
+        <p>完成一次回答后，这里会显示表达建议。</p>
+      </div>
+    );
+  }
+
+  const gentle = createGentleCorrection({ latest, answer, scenario });
+
   return (
     <div className="correction-stack">
-      {items.map((item, index) => (
-        <p key={index}>{item}</p>
-      ))}
+      <article className="gentle-correction">
+        <span className="section-kicker">温柔纠错</span>
+        <p>{gentle.praise}</p>
+        <dl>
+          <div>
+            <dt>原句</dt>
+            <dd>{gentle.original}</dd>
+          </div>
+          <div>
+            <dt>建议</dt>
+            <dd>{gentle.suggestion}</dd>
+          </div>
+          <div>
+            <dt>原因</dt>
+            <dd>{gentle.reason}</dd>
+          </div>
+        </dl>
+      </article>
       {latest?.feedbackError && <p>{latest.feedbackError}</p>}
     </div>
   );
@@ -711,6 +897,73 @@ function SessionSummary({ latest, scenario }) {
       </div>
     </div>
   );
+}
+
+function createGentleCorrection({ latest, answer, scenario }) {
+  const correction = latest.gentleCorrection || {};
+  const firstCorrection = latest.corrections?.[0];
+  return {
+    praise: correction.praise || latest.summary?.strength || "你已经把想法说出来了，这一步本身就很重要。",
+    original: correction.original || shortenText(answer || "你的本次回答", 120),
+    suggestion: correction.suggestion || latest.betterExpression || scenario.patterns[0],
+    reason: correction.reason || firstCorrection || "这样说会更自然，也更容易让对方理解你的重点。"
+  };
+}
+
+function createLocalScaffold(idea, scenario) {
+  const starter = scenario.patterns[0] || "I want to share one idea.";
+  return {
+    source: "local",
+    simple: "I want to explain my idea clearly.",
+    natural: `${starter} I can add one reason and one example.`,
+    formal: "I would like to explain my idea with a clear reason and a specific example.",
+    practiceTip: `本地模板已生成。你可以先用“${starter}”开头，再补充一个理由。`
+  };
+}
+
+function createExpressionAssets({ answer, scenario, analysis }) {
+  const assets = [];
+  if (analysis.betterExpression) {
+    assets.push(createExpressionAsset("rewrite", analysis.betterExpression, `${scenario.label} · 推荐改写`));
+  }
+  if (analysis.corrections?.[0]) {
+    assets.push(createExpressionAsset("mistake", analysis.corrections[0], `${scenario.label} · 常错提醒`));
+  }
+  if (analysis.overall >= 85) {
+    assets.push(createExpressionAsset("pattern", scenario.patterns[0], `${scenario.label} · 高分句型`));
+  }
+  if (!assets.length && answer) {
+    assets.push(createExpressionAsset("rewrite", shortenText(answer, 120), `${scenario.label} · 本次表达`));
+  }
+  return assets;
+}
+
+function createExpressionAsset(type, text, note) {
+  return {
+    id: `${type}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    type,
+    text,
+    note,
+    createdAt: Date.now()
+  };
+}
+
+function mergeExpressionAssets(current, incoming) {
+  const normalized = [...incoming, ...current].filter((asset) => asset?.text);
+  const seen = new Set();
+  return normalized
+    .filter((asset) => {
+      const key = `${asset.type}:${asset.text.toLowerCase()}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, 12);
+}
+
+function shortenText(text, maxLength) {
+  if (!text) return "";
+  return text.length > maxLength ? `${text.slice(0, maxLength - 1)}...` : text;
 }
 
 function analyzeSpeech(text, scenarioId) {

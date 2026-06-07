@@ -5,7 +5,7 @@ const fallbackModel = "gpt-4o-mini";
 const feedbackSchema = {
   type: "object",
   additionalProperties: false,
-  required: ["scores", "corrections", "betterExpression", "nextQuestion", "summary"],
+  required: ["scores", "corrections", "betterExpression", "nextQuestion", "summary", "gentleCorrection"],
   properties: {
     scores: {
       type: "object",
@@ -33,6 +33,17 @@ const feedbackSchema = {
         strength: { type: "string" },
         rewrite: { type: "string" },
         nextFocus: { type: "string" }
+      }
+    },
+    gentleCorrection: {
+      type: "object",
+      additionalProperties: false,
+      required: ["praise", "original", "suggestion", "reason"],
+      properties: {
+        praise: { type: "string" },
+        original: { type: "string" },
+        suggestion: { type: "string" },
+        reason: { type: "string" }
       }
     }
   }
@@ -129,7 +140,8 @@ function buildFeedbackPrompt({ answer, scenario, localAnalysis }) {
     "2. corrections 用中文给出 1-4 条具体、可执行的建议，不要泛泛而谈。",
     "3. betterExpression 给出一版更自然的英文改写，保持用户原意。",
     "4. nextQuestion 给出一句适合继续追问的英文教练问题。",
-    "5. summary.strength、summary.rewrite、summary.nextFocus 用中文写，rewrite 字段可以说明改写理由。"
+    "5. summary.strength、summary.rewrite、summary.nextFocus 用中文写，rewrite 字段可以说明改写理由。",
+    "6. gentleCorrection 必须采用温柔纠错结构：praise 先肯定用户，original 摘出用户原句中最需要改的一小段，suggestion 给出更自然英文，reason 用中文解释为什么。"
   ].join("\n");
 }
 
@@ -165,6 +177,12 @@ function normalizeFeedback(feedback) {
       strength: String(feedback.summary?.strength || "").trim(),
       rewrite: String(feedback.summary?.rewrite || "").trim(),
       nextFocus: String(feedback.summary?.nextFocus || "").trim()
+    },
+    gentleCorrection: {
+      praise: String(feedback.gentleCorrection?.praise || "").trim(),
+      original: String(feedback.gentleCorrection?.original || "").trim(),
+      suggestion: String(feedback.gentleCorrection?.suggestion || "").trim(),
+      reason: String(feedback.gentleCorrection?.reason || "").trim()
     }
   };
 }
