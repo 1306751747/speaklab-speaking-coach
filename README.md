@@ -260,6 +260,7 @@ src/app/api/feedback/route.js         AI 口语反馈接口
 src/app/api/scaffold/route.js         中文表达脚手架接口
 public/assets/clay-plasticine-bg.png  粘土背景纹理
 docs/competitive-analysis.md          竞品分析报告
+docs/PRD-SpeakLab.md                  产品需求文档 PRD
 .env.example                          AI 环境变量示例
 ```
 
@@ -319,3 +320,4 @@ Browser Web Speech API 是浏览器运行时能力，不属于打包依赖。
 ## 相关文档
 
 - [AI 英语口语训练竞品分析报告](docs/competitive-analysis.md)
+- [SpeakLab 产品需求文档 PRD](docs/PRD-SpeakLab.md)
